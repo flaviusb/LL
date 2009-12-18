@@ -62,8 +62,9 @@
 (mac header ()
   `(tag (p class "blu") (pr " ") (tag (div class "header")(if (get-user req) (character-header)
                                 (login-header)))))
-(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
+(defop index.html req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
 
+(defop || req "index.html")
 
 (= actionsdone* (table))
 ; format order date type data
@@ -84,9 +85,19 @@
 (defop addaction req
   (addaction (arg req 'type) (arg req 'data)))
 
-; format [...,[ordinality, name, data], ...]
+; format [...,[name, data], ...]
 (def parse-actions (json-data)
-  ())
+  ;assume this has been sanitized
+  (do
+    (= uuidtop* 0)
+    (= ordertop* 0)
+    (= actionqueue* (table))
+    (= uuid2order* (table))
+    (= order2uuid* (table))
+    (let parsed-data (from-json json-data)
+      ((each x (json-data)
+        (addaction x!ty x!da))))
+  ))
 (defop aq req
   ())
 

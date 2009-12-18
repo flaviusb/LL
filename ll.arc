@@ -104,7 +104,8 @@
 
 (def logged-in (user ip)
   ;(page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") ()))
-  (pr "Foo"))
+  ;(pr "Foo")
+  "index.html")
 
 (defop sessions req
   (login-handler req 'login hello-page))

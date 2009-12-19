@@ -77,9 +77,9 @@
 (= ordertop* 0)
 (def addaction (ty da)
   (do
-    (= order2uuid* (++ ordertop*) (++ uuidtop*))
-    (= uuid2order* uuidtop* ordertop*)
-    (= actionqueue* uuidtop* (obj 'order ordertop* 'date 'future 'type ty 'data da))
+    (= (order2uuid* (++ ordertop*)) (++ uuidtop*))
+    (= (uuid2order* uuidtop*) ordertop*)
+    (= (actionqueue* uuidtop*) (obj 'order ordertop* 'date 'future 'type ty 'data da))
   ))
 
 (defop addaction req

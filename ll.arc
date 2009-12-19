@@ -1,4 +1,4 @@
-;(load "read-json.aqrc")
+(load "lib/fromjson0.arc")
 ;(load "write-json.arc")
 
 
@@ -85,7 +85,7 @@
 (defop addaction req
   (addaction (arg req 'type) (arg req 'data)))
 
-; format [...,[name, data], ...]
+; format [...,{ty: name, da: data}, ...]
 (def parse-actions (json-data)
   ;assume this has been sanitized
   (do
@@ -94,7 +94,7 @@
     (= actionqueue* (table))
     (= uuid2order* (table))
     (= order2uuid* (table))
-    (let parsed-data (from-json json-data)
+    (let parsed-data (fromjson json-data)
       ((each x (json-data)
         (addaction x!ty x!da))))
   ))

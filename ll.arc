@@ -78,12 +78,12 @@
   (do
     (= (order2uuid* (++ ordertop*)) (++ uuidtop*))
     (= (uuid2order* uuidtop*) ordertop*)
-    (= (actionqueue* uuidtop*) (obj 'order ordertop* 'date 'future 'type ty 'data da))
+    (= (actionqueue* uuidtop*) (obj "order" ordertop* "date" "future" "type" ty "data" da))
   ))
 
 (defop addaction req
   (do
-    (addaction (arg req 'type) (arg req 'data))
+    (addaction (arg req "type") (arg req "data"))
     pr req))
 
 (defop showactions req
@@ -125,4 +125,4 @@
 (defop sessions req
   (login-handler req 'login hello-page))
 
-(serve 8080)
+(thread:serve 8080)

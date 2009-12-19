@@ -1,5 +1,4 @@
-(load "lib/fromjson0.arc")
-(load "lib/tojson0.arc")
+(each x '("urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc") (load (+ "lib/" x)))
 
 
 (def listtag (a) (eval `(attribute ,@a opstring)))
@@ -83,7 +82,9 @@
   ))
 
 (defop addaction req
-  (addaction (arg req 'type) (arg req 'data)))
+  (do
+    (addaction (arg req 'type) (arg req 'data))
+    pr req))
 
 (defop showactions req
   (pr (tojson actionqueue*)))

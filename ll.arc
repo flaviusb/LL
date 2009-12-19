@@ -1,5 +1,5 @@
 (load "lib/fromjson0.arc")
-;(load "write-json.arc")
+(load "lib/tojson0.arc")
 
 
 (def listtag (a) (eval `(attribute ,@a opstring)))
@@ -84,6 +84,9 @@
 
 (defop addaction req
   (addaction (arg req 'type) (arg req 'data)))
+
+(defop showactions req
+  (pr (tojson actionqueue*)))
 
 ; format [...,{ty: name, da: data}, ...]
 (def parse-actions (json-data)

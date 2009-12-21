@@ -30,7 +30,7 @@
 (= *characters* (table))
 (= *cabals* (table))
 
-(= (*players* 'test) (obj 'name 'test 'password 'password))
+(= (*players* 'test) (obj name 'test password 'password))
 
 ;actions as a list
 (= *actions* ())
@@ -87,7 +87,7 @@
     pr req))
 
 (defop showactions req
-  (pr (tojson actionqueue*)))
+  (tojson actionqueue*))
 
 ; format [...,{ty: name, da: data}, ...]
 (def parse-actions (json-data)

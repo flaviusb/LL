@@ -163,7 +163,7 @@
                               `(pr ,opt)
                               opt))
                         opts)
-                 (pr (string ec ">")))))))
+                 (pr (string ,ec ">")))))))
 
 (def end-tag (spec)
   `(pr ,(string "</" (carif spec) ">")))

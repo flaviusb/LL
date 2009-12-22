@@ -3,4 +3,7 @@ function ShowLogin()
   $(".common-form").show("slow");
 }
 
-//function  
+function actionise()
+{
+  $(".liveactions").sortable;
+} 

@@ -43,7 +43,7 @@
                                 (login-header)))))
 (defop index.html req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
 
-(defop || req "index.html")
+(defopr || req "index.html")
 
 (= actionsdone* (table))
 ; format order date type data
@@ -63,7 +63,7 @@
 
 (defop addaction req
   (do
-    (addaction (arg req "type") (arg req "data"))
+    (addaction (arg req "ty") (arg req "da"))
     pr req))
 
 (defop showactions req

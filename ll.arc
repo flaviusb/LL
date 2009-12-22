@@ -1,7 +1,5 @@
 (each x '("urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc") (load (+ "lib/" x)))
 
-
-
 (mac page (title cssname jsname . body)
   `; Put Doctype in here
   (tag (html) 
@@ -104,8 +102,8 @@
   ;(pr "Foo")
   "index.html")
 
-(defop sessions req
-  (login-handler req 'login hello-page))
+(defopr sessions req
+  (login-handler req 'login "index.html"))
 
 (def actions (req)
   (tag (div class "actions")

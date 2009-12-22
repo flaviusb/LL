@@ -1,3 +1,5 @@
 Yet another Arc web thing.
 
+This makes use of a number of hacks to the arc interpreter (under the "hacks" directory).
+It requires arc 3.1.
 

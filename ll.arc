@@ -59,7 +59,7 @@
   `(tag (div)(pr "FOOOOOOO")))
 
 (mac header ()
-  `(tag (p class "blu") (pr " ") (tag (div class "header")(if (get-user req) (character-header)
+  `(tag (p class "blue") (pr " ") (tag (div class "header")(if (get-user req) (character-header)
                                 (login-header)))))
 (defop index.html req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
 
@@ -89,7 +89,7 @@
 (defop showactions req
   (tojson actionqueue*))
 
-; format [...,{ty: name, da: data}, ...]
+; format {...,ord: {ty: name, da: data}, ...}
 (def parse-actions (json-data)
   ;assume this has been sanitized
   (do
@@ -99,8 +99,8 @@
     (= uuid2order* (table))
     (= order2uuid* (table))
     (let parsed-data (fromjson json-data)
-      ((each x (json-data)
-        (addaction x!ty x!da))))
+      ((for x 0 (len parsed-data)
+        (addaction (parsed-data.x "ty") (parsed_data.x "da")))))
   ))
 (defop aq req
   ())
@@ -124,5 +124,11 @@
 
 (defop sessions req
   (login-handler req 'login hello-page))
+
+(def actions (req)
+  (tag (div class "actions")
+    (tag (div class "deadactions"))
+    (tag (div class "liveactions"))
+  ))
 
 (thread:serve 8080)

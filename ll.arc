@@ -1,20 +1,6 @@
 (each x '("urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc") (load (+ "lib/" x)))
 
 
-(def listtag (a) (eval `(attribute ,@a opstring)))
-(def newtag (q . r) (each x r (eval `(listtag '(,q ,x)))))
-(newtag 'link 'rel 'type 'href) 
-(newtag 'p 'class)
-(newtag 'script 'type 'src)
-(newtag 'div 'class 'id)
-(newtag 'span 'class 'id)
-(newtag 'canvas 'id)
-(newtag 'a 'href 'onclick)
-(newtag 'img 'src 'class)
-(newtag 'fieldset 'id 'class)
-(newtag 'form 'method 'id 'action)
-(newtag 'input 'id 'name 'type 'value 'title 'tabindex)
-(newtag 'label 'for)
 
 (mac page (title cssname jsname . body)
   `; Put Doctype in here

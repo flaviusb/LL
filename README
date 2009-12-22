@@ -1,5 +1,6 @@
 Yet another Arc web thing.
 
-This makes use of a number of hacks to the arc interpreter (under the "hacks" directory).
+This makes use of a number of hacks to the arc interpreter and core libraries (under the "hacks" and "lib" directories).
+These are in the form of patches, which are applied as directed in main.hack, and replacements, which are in the lib directory.
 It requires arc 3.1.
 

@@ -26,16 +26,12 @@
      (tag (body)
        ,@body))))
 
-(= *players* (table))
-(= *characters* (table))
-(= *cabals* (table))
+(= players* (table))
+(= characters* (table))
+(= cabals* (table))
 
-(= (*players* 'test) (obj name 'test password 'password))
+(= (players* 'test) (obj name 'test password 'password))
 
-;actions as a list
-(= *actions* ())
-(def action-pane ()
-  (tag (div class "actionpane")(tag (script type "javascript")(pr ""))))
 ;initial-div
 ;request
 ;response

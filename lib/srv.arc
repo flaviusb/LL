@@ -155,9 +155,9 @@ Connection: close"))
      '((gif       "image/gif")
        (jpg       "image/jpeg")
        (png       "image/png")
-       (text/html "text/html; charset=utf-8")
+       (text/html "application/xhtml+xml; charset=utf-8")
        (text/css  "text/css; charset=utf-8")
-       (javascript "text/javascript; charset=utf-8")))
+       (javascript "application/javascript; charset=utf-8")))
 
 (= rdheader* "HTTP/1.0 302 Moved")
 

@@ -94,6 +94,7 @@
 (newtag 'form 'method 'id 'action)
 (newtag 'input 'id 'name 'type 'title 'tabindex)
 (newtag 'label 'for)
+(newtag 'html 'lang)
 
 (attribute body       alink          opcolor)
 (attribute body       bgcolor        opcolor)
@@ -136,12 +137,13 @@
 (attribute hr         color          opcolor)
 (attribute rss        version        opstring)
 
+(mac gendoctype () `(prn "<!DOCTYPE html>"))
 
 (mac gentag args (start-tag args))
      
 (mac tag (spec . body)
   `(if ,(is body nil)
-    ,(start-tag spec "/")
+    ,(start-tag spec " /")
     (do ,(start-tag spec)
        ,@body
        ,(end-tag spec))))

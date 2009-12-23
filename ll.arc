@@ -1,14 +1,14 @@
 (each x '("urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc") (load (+ "lib/" x)))
 
 (mac page (title cssname jsname . body)
-  `; Put Doctype in here
-  (tag (html) 
-     (tag (head) 
-       (tag (title) (pr ,title))
-       (tag (link rel "stylesheet" type "text/css" href ,cssname) (pr ""))
-       (each x '(,@jsname) (tag (script type "text/javascript" src x)))
-     (tag (body)
-       ,@body))))
+  `(do (gendoctype)
+       (tag (html lang "en") 
+         (tag (head) 
+           (tag (title) (pr ,title))
+           (tag (link rel "stylesheet" type "text/css" href ,cssname) (pr ""))
+           (each x '(,@jsname) (tag (script type "application/javascript" src x)))
+         (tag (body)
+           ,@body)))))
 
 (= players* (table))
 (= characters* (table))

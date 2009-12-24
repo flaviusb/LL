@@ -97,11 +97,6 @@
 (load-userinfo)
 (create-acct "foo" "foot")
 
-(def logged-in (user ip)
-  ;(page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") ()))
-  ;(pr "Foo")
-  "index.html")
-
 (defopr sessions req
   (do (login-handler req 'login (fn (a b) ())) "index.html"))
 

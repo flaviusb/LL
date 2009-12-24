@@ -36,14 +36,14 @@
    ))))
 
 (mac character-header ()
-  `(tag (div)(pr "FOOOOOOO")))
+  `(tag (div)(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ()
   `(tag (p class "blue") (pr " ") (tag (div class "header")(if (get-user req) (character-header)
                                 (login-header)))))
-(defop index.html req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
+(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
 
-(defopr || req "index.html")
+(defopr index.html req #\/)
 
 (= actionsdone* (table))
 ; format order date type data
@@ -103,7 +103,7 @@
   "index.html")
 
 (defopr sessions req
-  (login-handler req 'login "index.html"))
+  (do (login-handler req 'login (fn (a b) ())) "index.html"))
 
 (def actions (req)
   (tag (div class "actions")

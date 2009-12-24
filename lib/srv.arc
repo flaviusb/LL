@@ -139,7 +139,7 @@
         (respond o op (+ (parseargs (string (rev line))) args) cooks ip))))
 
 (= header* "HTTP/1.1 200 OK
-Content-Type: text/html; charset=utf-8
+Content-Type: application/xhtml+xml; charset=utf-8
 Connection: close")
 
 (= type-header* (table))

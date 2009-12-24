@@ -80,6 +80,8 @@
                 #\&  "&#38;"
                 c))))
 
+(= xmlns* (obj html ""))
+
 (def listtag (a) (eval `(attribute ,@a opstring)))
 (def newtag (q . r) (each x r (eval `(listtag '(,q ,x)))))
 (newtag 'link 'rel 'type 'href) 
@@ -94,7 +96,7 @@
 (newtag 'form 'method 'id 'action)
 (newtag 'input 'id 'name 'type 'title 'tabindex)
 (newtag 'label 'for)
-(newtag 'html 'lang)
+(newtag 'html 'lang 'xmlns 'xml:lang)
 
 (attribute body       alink          opcolor)
 (attribute body       bgcolor        opcolor)
@@ -137,7 +139,10 @@
 (attribute hr         color          opcolor)
 (attribute rss        version        opstring)
 
-(mac gendoctype () `(prn "<!DOCTYPE html>"))
+(mac gendoctype () `(prn
+"<?xml version=\"1.0\"?>
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
+ \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"))
 
 (mac gentag args (start-tag args))
      

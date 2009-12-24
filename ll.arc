@@ -2,13 +2,13 @@
 
 (mac page (title cssname jsname . body)
   `(do (gendoctype)
-       (tag (html lang "en") 
+       (tag (html xmlns "http://www.w3.org/1999/xhtml") 
          (tag (head) 
            (tag (title) (pr ,title))
            (tag (link rel "stylesheet" type "text/css" href ,cssname) (pr ""))
-           (each x '(,@jsname) (tag (script type "application/javascript" src x)))
+           (each x '(,@jsname) (tag (script type "application/javascript" src x))))
          (tag (body)
-           ,@body)))))
+           ,@body))))
 
 (= players* (table))
 (= characters* (table))

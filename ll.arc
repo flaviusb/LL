@@ -98,7 +98,7 @@
 (create-acct "foo" "foot")
 
 (defopr sessions req
-  (do (login-handler req 'login (fn (a b) ())) "index.html"))
+  (login-handler req 'login (list (fn (a b) "index.html") "index.html")))
 
 (def actions (req)
   (tag (div class "actions")

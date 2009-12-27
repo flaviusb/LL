@@ -36,10 +36,10 @@
    ))))
 
 (mac character-header ()
-  `(tag (div)(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
+  `(tag (div)(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ()
-  `(tag (p class "blue") (pr " ") (tag (span) (tag (a href "about")(pr "About")) (tag (a href "rules")(pr "House Rules")) (tag (div class "header")(if (get-user req) (character-header)
+  `(tag (p class "blue") (pr " ") (tag (span) (tag (a href "about")(pr "About")) (pr " ") (tag (a href "rules")(pr "House Rules")) (tag (div class "header")(if (get-user req) (character-header)
                                 (login-header))))))
 (defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
 

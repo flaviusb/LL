@@ -47,7 +47,7 @@
 (def opcolor (key val) 
   (w/uniq gv
     `(whenlet ,gv ,val
-       (pr ,(string " " key "=#") (hexrep ,gv)))))
+       (pr ,(string " " key "=\"#") (hexrep ,gv) #\"))))
 
 (def opstring (key val)
   `(aif ,val (pr ,(+ " " key "=\"") it #\")))
@@ -59,10 +59,10 @@
   `(pr ,(+ " " key "=") ,val))
 
 (def opsel (key val)
-  `(if ,val (pr " selected")))
+  `(if ,val (pr " selected=\"selected\"")))
 
 (def opcheck (key val)
-  `(if ,val (pr " checked")))
+  `(if ,val (pr " checked=\"checked\"")))
 
 (def opesc (key val)
   `(awhen ,val

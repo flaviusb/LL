@@ -2,7 +2,7 @@
 
 ; To improve performance with static files, set static-max-age*.
 
-(= arcdir* "arc/" logdir* "arc/logs/" staticdir* "static/")
+(= arcdir* "arc/" logdir* "arc/logs/" staticdirs* '("static/"))
 
 (= quitsrv* nil breaksrv* nil) 
 
@@ -23,7 +23,7 @@
   (w/socket s port (handle-request s t)))
 
 (def ensure-srvdirs ()
-  (map ensure-dir (list arcdir* logdir* staticdir*)))
+  (map ensure-dir (+ (list arcdir* logdir*) staticdirs*)))
 
 (= srv-noisy* nil)
 
@@ -95,11 +95,12 @@
         (if srv-noisy* (pr c))
         (if (is c #\newline)
             (if (is (++ nls) 2) 
-                (let (type op args n cooks) (parseheader (rev lines))
+                (with ((type op args n cooks) (parseheader (rev lines))
+                       headers (headerlines (rev lines)))
                   (let t1 (msec)
                     (case type
-                      get  (respond o op args cooks ip)
-                      post (handle-post i o op args n cooks ip)
+                      get  (build-response o op args cooks ip headers)
+                      post (handle-post i o op args n cooks ip headers)
                            (respond-err o "Unknown request: " (car lines)))
                     (log-request type op args cooks ip t0 t1)
                     (set responded)))
@@ -126,7 +127,7 @@
 ; Could ignore return chars (which come from textarea fields) here by
 ; (unless (is c #\return) (push c line))
 
-(def handle-post (i o op args n cooks ip)
+(def handle-post (i o op args n cooks ip headers)
   (if srv-noisy* (pr "Post Contents: "))
   (if (no n)
       (respond-err o "Post request without Content-Length.")
@@ -136,8 +137,7 @@
           (-- n)
           (push c line)) 
         (if srv-noisy* (pr "\n\n"))
-        (respond o op (+ (parseargs (string (rev line))) args) cooks ip))))
-
+        (build-response o op (+ (parseargs (string (rev line))) args) cooks ip headers))))
 (= header* "HTTP/1.1 200 OK
 Content-Type: application/xhtml+xml; charset=utf-8
 Connection: close")
@@ -160,6 +160,10 @@ Connection: close"))
        (javascript "application/javascript; charset=utf-8")))
 
 (= rdheader* "HTTP/1.0 302 Moved")
+
+(= nfheader* "HTTP/1.0 404 Not Found
+Content-Type: text/html; charset=utf-8
+Connection: close")
 
 (= srvops* (table) redirector* (table) optimes* (table) opcounts* (table))
 
@@ -208,28 +212,30 @@ Connection: close"))
 
 (= unknown-msg* "Unknown." max-age* (table) static-max-age* nil)
 
-(def respond (str op args cooks ip)
+(def build-response (str op args cooks ip headers)
   (w/stdout str
-    (iflet f (srvops* op)
-           (let req (inst 'request 'args args 'cooks cooks 'ip ip)
-             (if (redirector* op)
-                 (do (prn rdheader*)
-                     (prn "Location: " (f str req))
-                     (prn))
-                 (do (prn header*)
-                     (awhen (max-age* op)
-                       (prn "Cache-Control: max-age=" it))
-                     (f str req))))
-           (let filetype (static-filetype op)
-             (aif (and filetype (file-exists (string staticdir* op)))
-                  (do (prn (type-header* filetype))
-                      (awhen static-max-age*
-                        (prn "Cache-Control: max-age=" it))
-                      (prn)
-                      (w/infile i it
-                        (whilet b (readb i)
-                          (writeb b str))))
-                  (respond-err str unknown-msg*))))))
+    (respond (inst 'request 'args args 'cooks cooks 'ip ip 'op op 'str str 'headers headers))))
+
+(def respond (req)
+  (iflet f (srvops* req!op)
+         (if (redirector* req!op)
+               (do (prn rdheader*)
+                   (prn "Location: " (f req!str req))
+                   (prn))
+               (do (prn header*)
+                   (awhen (max-age* req!op)
+                     (prn "Cache-Control: max-age=" it))
+                   (f req!str req)))
+         (let filetype (static-filetype req!op)
+           (aif (and filetype (some [file-exists (string _ req!op)] staticdirs*))
+                (do (prn (type-header* filetype))
+                    (awhen static-max-age*
+                      (prn "Cache-Control: max-age=" it))
+                    (prn)
+                    (w/infile i it
+                      (whilet b (readb i)
+                        (writeb b))))
+                (respond-not-found req)))))
 
 (def static-filetype (sym)
   (let fname (coerce sym 'string)
@@ -247,11 +253,20 @@ Connection: close"))
            "js"   'javascript
            ))))
 
+(def respond-not-found (req)
+  (prn nfheader*)
+  (prn)
+  (prn unknown-msg*))
+
 (def respond-err (str msg . args)
   (w/stdout str
     (prn header*)
     (prn)
     (apply pr msg args)))
+
+(def headerlines (lines)
+  (trues [only.cdr ((ac-scheme regexp-match) "^([-a-zA-Z]+)[ \t]*:[ \t]*(.*)" _)]
+         cdr.lines))
 
 (def parseheader (lines)
   (let (type op args) (parseurl (car lines))

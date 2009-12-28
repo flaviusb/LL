@@ -45,6 +45,25 @@
 
 (defopr index.html req #\/)
 
+(def eschr (chr)
+  (case chr   #\<  "&#60;" 
+              #\>  "&#62;"
+              #\"  "&#34;"
+              #\'  "&#39;"
+              #\&  "&#38;"
+                   chr))
+
+(defop rules req
+  (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.js" "standard.js")
+    (tag (div)
+      (header)
+      (tag h1 (pr "Nexus"))
+      (w/infile i "static/rules.text"
+        (whilet b (readc i)
+          (let xf (string eschr.b)
+            (each x xf
+            (writec x))))))))
+
 (= actionsdone* (table))
 ; format order date type data
 ; order can be used as a uuid; it is monotonically increasing

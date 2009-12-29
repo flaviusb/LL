@@ -107,7 +107,7 @@ Spirits created by Eternal Dreams grow per chapter. The Spirit grows to the rank
 
 Wraiths of Epochs [Mysterium]: ST Team Approval.  
 
-Magical Traditions
+h3. Magical Traditions
 
 Joining a Magical Tradition requires ST Approval.
 
@@ -118,9 +118,9 @@ In addition to the requirements of “Awakened, Occult 2, Academics or Occult Sk
 Custom Magical Traditions which do not confer mechanical benefits require ST Approval.
 Custom Magical Traditions which confer mechanical benefits require ST Team Approval.
 
-D.Additional Rules
+h2. D. Additional Rules
 
-A. Arcana
+h3. Arcana
 
 Creative Thaumaturgy is not available for play.  
 
@@ -132,13 +132,13 @@ Modifications of a spell that require advanced arcana knowledge are not cumulati
 
 Resistant damage may only be self-inflicted or caused by absorbing paradox. No effect can cause resistant damage in others. Any such affects are converted to normal damage.
 
-Spells to Employ Spirits
+h4. Spells to Employ Spirits
 
 A Willpower point is spent for each spirit bound or otherwise controlled. This cannot be recovered until the spell ends or a Willpower dot is spent to release it.
 
 These restrictions not apply if a spell is used in the process of purchasing a Merit such as a Fetish, Familiar or Guardian Spirit. 
 
-Rotes & Spellcasting
+h4. Rotes & Spellcasting
 
 Rote titles that include the name of your Faction do not require approval (Seers of the Throne, Nephandi and Banishers are considered 'Factions' for the purposes of this rule).
 
@@ -154,15 +154,15 @@ Characters are not required to purchase separate rotes for each arcana level of 
 
 Rotes from the Guardians of the Veil book that refer to the "Perception" Attribute use the Wits attribute instead.
 
-Instant Spellcasting
+h4. Instant Spellcasting
 
 Voluntary penalties taken by the caster using metamagic effects may not reduce the caster’s draw pool below 1, however further penalties taken after the creation of the spell (resitance traits, defense etc) may do so.
  
-Dispel/Counterspell
+h4. Dispel/Counterspell
 
 Counterspell and dispel successes are not cumulative within the same combined casting, but may target multiple spells.
 
-Limitations to Bonuses and Traits
+h4. Limitations to Bonuses and Traits
 
 No single Trait or bonus created by a spell can exceed the level of the Caster’s relevant Arcanum.  
 
@@ -170,18 +170,17 @@ If a player requires information from another character’s sheet (e.g. if conte
 
 Bonuses added to an item from Arcana do not stack, only the highest bonus is applied.
 
-Failed Social and Mental Tests
+h4. Failed Social and Mental Tests
 
 Spells are considered social or mental tests if their rote pool uses a social or mental skill, or if they are opposed by composure or resolve.
 
-Sympathetic Magic
+h4. Sympathetic Magic
 
 Any spell affecting multiple targets always uses the weakest sympathetic connection of those targets.
 
-Penalties from Occultation and Fame apply both to all magic.
-
+Penalties from Occultation and Fame apply both to all sympathetic magic.
  
-Specific Rote Alterations
+h4. Specific Rote Alterations
 
 
 	Acidic Spatter [Adamantine Arrow]:  Not sanctioned for play.
@@ -268,11 +267,11 @@ Weaponize Object [Adamantine Arrow]:  The maximum equipment bonus this spell can
 
 Worst Moment [Banishers]: This spell uses the mechanical variant available, no more than two successes may be 'spent' on any one action.
 
-Arcane Experience
+h4. Arcane Experience
 
 Arcane XP can only be spent to increase Gnosis, Arcana or to buy Rotes.
 
-Merits
+h3. Merits
 
 All merits that are 'Faction specific' in their write up (Banisher only, Order only) may not be purchased by non-faction members.
 
@@ -290,18 +289,18 @@ Ritual Synergy [Tome of Mysteries]: This merit is sanctioned for play. The liste
 	Talisman of Universal Safety [Silver Ladder]: Not sanctioned for play.
 Whispers [Mysterium]: ST Approval.
 
-Items
+h3. Items
 
-Imbued Items
+h4. Imbued Items
 
 Imbued items up to 5 dots do not require approval. Items over 5 dots require ST Approval.
 
-Enhanced Items
+h4. Enhanced Items
 
 Enhanced items up to 5 dots do not require approval. Items over 5 dots require ST Approval.
 Items made of Thaumium are 5 dot Enhanced Items.
 
-Artifacts/Imbued Items/Enhanced Items
+h4. Artifacts/Imbued Items/Enhanced Items
 
 All custom artifacts require ST Team Approval.
 Canon artifacts require ST Approval.
@@ -311,14 +310,14 @@ The possession of an artifact does not confer a bonus to Order Status. Possessio
 
 Enhanced Items can contain effects from the following rotes: Alter Integrity , Alter Efficiency , Alter Size , Decreased Size, Armor, Bulletproof, and Durability alterations. Armor is limited to a bonus equal to the caster's dots in Matter.  
 
-	Specific Items
+h4. Specific Items
 
 	Alien Cuffs [Banishers]: Not sanctioned for play.
 	Raiment of Return [Adamantine Arrow]: Not sanctioned for play
 	Translator Chamber [Banishers] Not sanctioned for play
 The Truck [Banishers] Not sanctioned for play
 
-Alchemical Items
+h4. Alchemical Items
 
 Alchemical gross material carries an Intimate sympathetic connection
 to its creator.
@@ -328,7 +327,7 @@ indefinite storage devices. ToM 145: "Alchemical substances are
 lesser Enchanted Items that are consumed during use and never possess
 indefinite durations." 
 
-Fetishes
+h4. Fetishes
 
 All fetishes must conform to the 'Create Fetish' rote and must used sanctioned Numina from Mage: The Awakening. 
 	No other numina are currently sanctioned. 
@@ -358,7 +357,7 @@ All pacts should be designed by the storyteller and any with a duration of one m
         
 	Epic pacts require ST Team Approval.
 
-E.Optional Rules
+h2. E. Optional Rules
 
 The following books have sanctioned optional rules in Nexus: Auckland Awakenings, any optional rules not listed below are considered unsanctioned.
  
@@ -366,7 +365,7 @@ The following books have sanctioned optional rules in Nexus: Auckland Awakenings
 
 	Optional rules for the Duel Arcane on pg 122.
 
-F.Sanctioned Books
+h2. F.Sanctioned Books
 
 	Adamantine Arrow
 	Astral Realms

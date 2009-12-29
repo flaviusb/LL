@@ -76,8 +76,8 @@
 (def textize (fi)
     (let temp ""
       (do (whilet li (eschr readc.fi) (= temp (+ temp li)))
-          (= temp ((ac-scheme regexp-replace*) "^h([1234]). ([^\n]*)<br />\n" temp "<h\\1>\\2</h\\1><br />\n"))
-          (= temp ((ac-scheme regexp-replace*) "\nh([1234]). ([^\n]*)<br />\n" temp "\n<h\\1>\\2</h\\1><br />\n"))
+          (= temp ((ac-scheme regexp-replace*) "^h([1234]). ([^\n]*)<br />\n" temp "<h\\1>\\2</h\\1>\n"))
+          (= temp ((ac-scheme regexp-replace*) "\nh([1234]). ([^\n]*)<br />\n" temp "\n<h\\1>\\2</h\\1>\n"))
           temp)))
 
 (defop rules req

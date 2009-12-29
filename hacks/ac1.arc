@@ -10,3 +10,6 @@
             ,v ,val)
        (ac-scheme (namespace-set-variable-value! ,gname ,v))
        nil)))
+
+(= scheme-f (read "#f"))
+(= scheme-t (read "#t"))

@@ -84,8 +84,13 @@
   (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.js" "standard.js")
     (tag (div)
       (header)
-      (tag h1 (pr "Nexus"))
       (cacheize "static/rules.text" "rules.html" textize))))
+
+(defop about req
+  (page "About Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js")
+    (tag (div)
+      (header)
+      (cacheize "static/about.text" "about.html" textize))))
 
 (= actionsdone* (table))
 ; format order date type data

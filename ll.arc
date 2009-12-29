@@ -71,7 +71,7 @@
 
 ; Not exactly portable code...
 (def clear-cache-directories ()
-  (each x cachedirs* (system (string "rm -rf " x " && mkdir -p " x))))
+  (each x cachedirs* (system:string "rm -rf " x " && mkdir -p " x)))
 
 (def textize (fi)
     (let temp ""

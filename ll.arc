@@ -155,7 +155,7 @@
 
 (defop aq req
   (page "Ascension Auckland: Action Queue" "style.css" ("jquery-1.3.2.min.js" "jquery-ui-1.7.2.custom.min.js" "standard.js")
-    (tag (div onload "addaction('a', 'b'); addaction('c', 'd');")
+    (tag (div onload "actionise(); addaction('a', 'b'); addaction('c', 'd');")
          (header)
          (actions))))
 

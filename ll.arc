@@ -147,15 +147,23 @@
 (defopr sessions req
   (login-handler req 'login (list (fn (a b) "index.html") "index.html")))
 
-(def actions (req)
-  (tag (div class "actions")
+(mac actions ()
+  `(tag (div class "actions")
     (tag (div class "deadactions"))
     (tag (div class "liveactions"))
   ))
 
 (defop aq req
   (page "Ascension Auckland: Action Queue" "style.css" ("jquery-1.3.2.min.js" "jquery-ui-1.7.2.custom.min.js" "standard.js")
-    (tag (div onload "actionise(); addaction('a', 'b'); addaction('c', 'd');")
+    (tag (div)
+         (tag (script type "application/javascript") (pr "
+<![CDATA[
+$(document).ready(function(){
+  actionise();
+  addaction('foo', 'bar');
+});
+]]>
+"))
          (header)
          (actions))))
 

@@ -2,7 +2,7 @@
 
 ; To improve performance with static files, set static-max-age*.
 
-(= arcdir* "arc/" logdir* "arc/logs/" staticdirs* '("static/"))
+(= arcdir* "arc/" logdir* "arc/logs/" staticdirs* '("static/") cachedirs* '("static-cache"))
 
 (= quitsrv* nil breaksrv* nil) 
 
@@ -23,7 +23,7 @@
   (w/socket s port (handle-request s t)))
 
 (def ensure-srvdirs ()
-  (map ensure-dir (+ (list arcdir* logdir*) staticdirs*)))
+  (map ensure-dir (+ (list arcdir* logdir*) staticdirs* cachedirs*)))
 
 (= srv-noisy* nil)
 

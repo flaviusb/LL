@@ -46,23 +46,41 @@
 (defopr index.html req #\/)
 
 (def eschr (chr)
-  (case chr   #\<  "&#60;" 
-              #\>  "&#62;"
-              #\"  "&#34;"
-              #\'  "&#39;"
-              #\&  "&#38;"
-                   chr))
+  (case chr   #\<        "&#60;" 
+              #\>        "&#62;"
+              #\"        "&#34;"
+              #\'        "&#39;"
+              #\&        "&#38;"
+              #\newline  "<br />"
+                         chr))
+
+; Because of stdlib limitations, we cannot get file modification time in a platform portable way
+; Instead, we explicitly flush the cache, and otherwise just use the existing file
+(def cacheize (file name proc)
+  (let fl (+ "static-cache/" name)
+    (if (file-exists fl)
+        (w/infile i fl
+          (whilet b (readc i)
+            (writec b)))
+        (w/outfile fo fl
+          (w/infile fi file
+              (let str proc.fi
+                (do (disp str fo)
+                    (disp str))))))))
+
+(def textize (fi)
+  ;(w/outstring str
+    (let temp ""
+      (do (whilet li (eschr readc.fi) (= temp (+ temp li)))
+          temp)))
+          ;(disp temp))))))
 
 (defop rules req
   (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.js" "standard.js")
     (tag (div)
       (header)
       (tag h1 (pr "Nexus"))
-      (w/infile i "static/rules.text"
-        (whilet b (readc i)
-          (let xf (string eschr.b)
-            (each x xf
-            (writec x))))))))
+      (cacheize "static/rules.text" "rules.html" textize))))
 
 (= actionsdone* (table))
 ; format order date type data

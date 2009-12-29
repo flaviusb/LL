@@ -133,8 +133,8 @@
 (mac defc ()
   ())
 
+;(clear-cachedirs)
 (load-userinfo)
-(create-acct "foo" "foot")
 
 (defopr sessions req
   (login-handler req 'login (list (fn (a b) "index.html") "index.html")))

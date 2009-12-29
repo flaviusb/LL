@@ -69,6 +69,10 @@
                   (do (disp str fo)
                       (disp str)))))))))
 
+; Not exactly portable code...
+(def clear-cache-directories ()
+  (each x cachedirs* (system (string "rm -rf " x " && mkdir -p " x))))
+
 (def textize (fi)
     (let temp ""
       (do (whilet li (eschr readc.fi) (= temp (+ temp li)))
@@ -130,7 +134,7 @@
 (mac defc ()
   ())
 
-;(clear-cachedirs)
+(clear-cache-directories)
 (load-userinfo)
 
 (defopr sessions req

@@ -56,17 +56,19 @@
 
 ; Because of stdlib limitations, we cannot get file modification time in a platform portable way
 ; Instead, we explicitly flush the cache, and otherwise just use the existing file
-(def cacheize (file name proc)
-  (let fl (+ "static-cache/" name)
-    (if (file-exists fl)
-        (w/infile i fl
-          (whilet b (readc i)
-            (writec b)))
-        (w/outfile fo fl
-          (w/infile fi file
-              (let str proc.fi
-                (do (disp str fo)
-                    (disp str))))))))
+(def cacheize (file name proc (o revi nil))
+  (do
+    (if (is revi nil) (= revi (cut (readline:pipe-from:string "git log " file) 7)))
+    (let fl (+ "static-cache/" revi ":" name)
+      (if (file-exists fl)
+          (w/infile i fl
+            (whilet b (readc i)
+              (writec b)))
+          (w/outfile fo fl
+              (let fi (pipe-from:string "git show " revi ":" file)
+                (let str proc.fi
+                  (do (disp str fo)
+                      (disp str)))))))))
 
 (def textize (fi)
   ;(w/outstring str

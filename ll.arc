@@ -10,11 +10,8 @@
          (tag (body)
            ,@body))))
 
-(= players* (table))
 (= characters* (table))
 (= cabals* (table))
-
-(= (players* 'test) (obj name 'test password 'password))
 
 ;initial-div
 ;request
@@ -56,6 +53,8 @@
 
 ; Because of stdlib limitations, we cannot get file modification time in a platform portable way
 ; Instead, we explicitly flush the cache, and otherwise just use the existing file
+; As the 'cache' is rev + processing -> temp file with rev identifier, the main reason to flush
+; the 'cache' is when the processing method changes
 (def cacheize (file name proc (o revi nil))
   (do
     (if (is revi nil) (= revi (cut (readline:pipe-from:string "git log " file) 7)))
@@ -71,11 +70,9 @@
                       (disp str)))))))))
 
 (def textize (fi)
-  ;(w/outstring str
     (let temp ""
       (do (whilet li (eschr readc.fi) (= temp (+ temp li)))
           temp)))
-          ;(disp temp))))))
 
 (defop rules req
   (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.js" "standard.js")

@@ -38,7 +38,7 @@
 (mac header ()
   `(tag (p class "blue") (pr " ") (tag (span) (tag (a href "about")(pr "About")) (pr " ") (tag (a href "rules")(pr "House Rules")) (tag (div class "header")(if (get-user req) (character-header)
                                 (login-header))))))
-(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
+(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
 
 (defopr index.html req #\/)
 
@@ -81,13 +81,13 @@
           temp)))
 
 (defop rules req
-  (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.js" "standard.js")
+  (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.min.js" "standard.js")
     (tag (div)
       (header)
       (cacheize "static/rules.text" "rules.html" textize))))
 
 (defop about req
-  (page "About Ascension Auckland" "style.css" ("jquery-1.3.2.js" "standard.js")
+  (page "About Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js")
     (tag (div)
       (header)
       (cacheize "static/about.text" "about.html" textize))))

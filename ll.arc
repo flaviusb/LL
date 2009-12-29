@@ -33,7 +33,7 @@
    ))))
 
 (mac character-header ()
-  `(tag (div)(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
+  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ()
   `(tag (p class "blue") (pr " ") (tag (span) (tag (a href "about")(pr "About")) (pr " ") (tag (a href "rules")(pr "House Rules")) (tag (div class "header")(if (get-user req) (character-header)
@@ -152,5 +152,11 @@
     (tag (div class "deadactions"))
     (tag (div class "liveactions"))
   ))
+
+(defop aq req
+  (page "Ascension Auckland: Action Queue" "style.css" ("jquery-1.3.2.min.js" "jquery-ui-1.7.2.custom.min.js" "standard.js")
+    (tag (div onload "addaction('a', 'b'); addaction('c', 'd');")
+         (header)
+         (actions))))
 
 (thread:serve 8080)

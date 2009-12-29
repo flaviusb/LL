@@ -87,7 +87,7 @@
 (newtag 'link 'rel 'type 'href) 
 (newtag 'p 'class)
 (newtag 'script 'type 'src)
-(newtag 'div 'class 'id)
+(newtag 'div 'class 'id 'onload)
 (newtag 'span 'class 'id 'align)
 (newtag 'canvas 'id)
 (newtag 'a 'rel 'class 'id 'href 'onclick)
@@ -97,6 +97,7 @@
 (newtag 'input 'id 'name 'type 'title 'tabindex)
 (newtag 'label 'for)
 (newtag 'html 'lang 'xmlns 'xml:lang)
+(newtag 'body 'onload)
 
 (attribute body       alink          opcolor)
 (attribute body       bgcolor        opcolor)

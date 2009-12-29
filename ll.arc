@@ -1,4 +1,4 @@
-(each x '("urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc") (load (+ "lib/" x)))
+(each x '("ac1.arc" "urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc") (load (+ "lib/" x)))
 
 (mac page (title cssname jsname . body)
   `(do (gendoctype)
@@ -48,7 +48,7 @@
               #\"        "&#34;"
               #\'        "&#39;"
               #\&        "&#38;"
-              #\newline  "<br />"
+              #\newline  "<br />\n"
                          chr))
 
 ; Because of stdlib limitations, we cannot get file modification time in a platform portable way
@@ -76,6 +76,8 @@
 (def textize (fi)
     (let temp ""
       (do (whilet li (eschr readc.fi) (= temp (+ temp li)))
+          (= temp ((ac-scheme regexp-replace*) "^h([1234]). ([^\n]*)<br />\n" temp "<h\\1>\\2</h\\1><br />\n"))
+          (= temp ((ac-scheme regexp-replace*) "\nh([1234]). ([^\n]*)<br />\n" temp "\n<h\\1>\\2</h\\1><br />\n"))
           temp)))
 
 (defop rules req

@@ -1,4 +1,4 @@
-A.Draw System
+h2. A.Draw System
 
 The draw system which will be used for all tests in Nexus: Auckland Awakening will be 40 Draw Pool.
 
@@ -6,14 +6,14 @@ This system uses a 40 card deck, from which the standard pool (attribute + skill
 
 Where an ST is present they will deal cards for tests while either player may deal for any tests where the ST is not present.  Only tests made in the presence of an ST or at least one non-cabal member will be considered binding by the STs.
 
-B.Character Creation
+h2. B.Character Creation
 
-Age
+h3. Age
 
 Currently under the age of 18: ST Team Approval
 Awakened under the age of 10: ST Approval
 
-Type
+h3. Type
 
 Banishers, Seers of the Throne, Left-Handed Legacies: ST Approval
 The Mad: Not permitted for play
@@ -22,12 +22,12 @@ Proximus: ST Approval
 Second Sight Templates: Not permitted for play
 Illuminates: ST Approval (Illuminates use normal Proximus character creation rules)
 
-Gnosis
+h3. Gnosis
 
 Characters may start play with a Gnosis of up to 3 bought with Backgrounds at character creation or with XP.
 All Gnosis increases require ST Team Approval.
 
-XP Allowances
+h3. XP Allowances
 
 All characters must be created without any xp as basic Mages.
 Banisher characters ONLY may use the optional character creation rules in the Banishers book.
@@ -41,9 +41,9 @@ Achievement of all 7 other allowances: 10xp
 
 All xp allocations are at the discretion of the characters faction ST.
 
-C.Organisations
+h2. C.Organisations
 
-“Order” Membership
+h3. “Order” Membership
 
 For the purposes of this section, 'Order' refers to an Order, Ministry, Whisper or Vision. Characters can hold status in multiple Orders without restriction. 
 
@@ -53,16 +53,16 @@ Membership in a second (or more) Order entitles a character to purchase the Orde
 
 Rote specialties are not tied to particular rotes (as indicated in White Wolf's books) but are instead techniques and particular secrets practiced by the individual Orders.
 
-Order Status
+h3. Order Status
 
 Order status functions as per the rules in Mage: The Awakening, however no XP charges apply to Order status and this will be increased and decreased as appropriate by your Faction ST.
 
-Consilium Status
+h3. Consilium Status
 
 Consilium status functions as per the rules in Mage: The Awakening, however no XP charges apply to Consilium status and this will be increased and decreased as appropriate by your Faction ST.
 
 
-Legacies
+h3. Legacies
 
 Joining a Legacy requires ST Approval.
 
@@ -77,7 +77,7 @@ Characters inducted into a Legacy by an NPC Mentor must have the Mentor Merit. N
 
 Characters with an NPC Mentor do not pay their mentor XP whilst learning their attainments, that cost is reflected by the purchase of the Mentor Merit.
 
-Additional Legacy Rules
+h3. Additional Legacy Rules
 
 Legacies without a parent Order are considered to have the parent Order of their Order book (if from an Order book) or to have no parent Order.
 

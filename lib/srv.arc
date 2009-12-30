@@ -142,6 +142,8 @@
 Content-Type: application/xhtml+xml; charset=utf-8
 Connection: close" 'json "HTTP/1.1 200 OK
 Content-Type: text/json; charset=utf-8
+Connection: close" 'text "HTTP/1.1 200 OK
+Content-Type: text/plain; charset=utf-8
 Connection: close"))
 
 (= type-header* (table))
@@ -203,6 +205,9 @@ Connection: close")
 
 (mac defopjson (name parm . body)
   `(defopmt ,name json ,parm ,@body))
+
+(mac defoptext (name parm . body)
+  `(defopmt ,name text ,parm ,@body))
 
 ; Defines op as a redirector.  Its retval is new location.
 

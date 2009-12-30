@@ -160,8 +160,13 @@
 <![CDATA[
 $(document).ready(function(){
   actionise();
-  addaction('foo', 'bar');
-});
+  $.getJSON('http://localhost:8080/showactions',
+    function(data){
+      $.each(data.items, function(i,item){
+        addaction(item.type, item.data);
+      });
+    });
+  });
 ]]>
 "))
          (header)

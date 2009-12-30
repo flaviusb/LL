@@ -141,7 +141,7 @@
 (= header* (obj 'xhtml "HTTP/1.1 200 OK
 Content-Type: application/xhtml+xml; charset=utf-8
 Connection: close" 'json "HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
+Content-Type: text/json; charset=utf-8
 Connection: close"))
 
 (= type-header* (table))
@@ -192,11 +192,17 @@ Connection: close")
   `(= (redirector* ',name) t
       (srvops* ',name)     '((fn ,parms ,@body) ',ty)))
 
-(mac defop (name parm . body)
+(mac defopmt (name ty parm . body)
   (w/uniq gs
     `(do (wipe (redirector* ',name))
-         (defop-raw ,name xhtml (,gs ,parm) 
+         (defop-raw ,name ,ty (,gs ,parm) 
            (w/stdout ,gs (prn) ,@body)))))
+
+(mac defop (name parm . body)
+  `(defopmt ,name xhtml ,parm ,@body))
+
+(mac defopjson (name parm . body)
+  `(defopmt ,name json ,parm ,@body))
 
 ; Defines op as a redirector.  Its retval is new location.
 

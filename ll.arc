@@ -113,7 +113,7 @@
     (addaction (arg req "ty") (arg req "da"))
     pr req))
 
-(defop showactions req
+(defopjson showactions req
   (tojson actionqueue*))
 
 ; format {...,ord: {ty: name, da: data}, ...}
@@ -162,7 +162,7 @@ $(document).ready(function(){
   actionise();
   $.getJSON('http://localhost:8080/showactions',
     function(data){
-      $.each(data.items, function(i,item){
+      $.each(data, function(i,item){
         addaction(item.type, item.data);
       });
     });

@@ -138,9 +138,11 @@
           (push c line)) 
         (if srv-noisy* (pr "\n\n"))
         (build-response o op (+ (parseargs (string (rev line))) args) cooks ip headers))))
-(= header* "HTTP/1.1 200 OK
+(= header* (obj 'xhtml "HTTP/1.1 200 OK
 Content-Type: application/xhtml+xml; charset=utf-8
-Connection: close")
+Connection: close" 'json "HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Connection: close"))
 
 (= type-header* (table))
 
@@ -177,22 +179,23 @@ Connection: close")
 ; For ops that want to add their own headers.  They must thus remember 
 ; to prn a blank line before anything meant to be part of the page.
 
-(mac defop-raw (name parms . body)
+(mac defop-raw (name ty parms . body)
   (w/uniq t1
     `(= (srvops* ',name) 
-        (fn ,parms 
-          (let ,t1 (msec)
-            (do1 (do ,@body)
-                 (save-optime ',name (- (msec) ,t1))))))))
+        '((fn ,parms 
+            (let ,t1 (msec)
+              (do1 (do ,@body)
+                   (save-optime ',name (- (msec) ,t1)))))
+          ',ty))))
 
-(mac defopr-raw (name parms . body)
+(mac defopr-raw (name ty parms . body)
   `(= (redirector* ',name) t
-      (srvops* ',name)     (fn ,parms ,@body)))
+      (srvops* ',name)     '((fn ,parms ,@body) ',ty)))
 
 (mac defop (name parm . body)
   (w/uniq gs
     `(do (wipe (redirector* ',name))
-         (defop-raw ,name (,gs ,parm) 
+         (defop-raw ,name xhtml (,gs ,parm) 
            (w/stdout ,gs (prn) ,@body)))))
 
 ; Defines op as a redirector.  Its retval is new location.
@@ -200,7 +203,7 @@ Connection: close")
 (mac defopr (name parm . body)
   (w/uniq gs
     `(do (set (redirector* ',name))
-         (defop-raw ,name (,gs ,parm)
+         (defop-raw ,name xhtml (,gs ,parm)
            ,@body))))
 
 ;(mac testop (name . args) `((srvops* ',name) ,@args))
@@ -217,15 +220,16 @@ Connection: close")
     (respond (inst 'request 'args args 'cooks cooks 'ip ip 'op op 'str str 'headers headers))))
 
 (def respond (req)
-  (iflet f (srvops* req!op)
-         (if (redirector* req!op)
+  (iflet (f tty) (srvops* req!op)
+         (let ff (eval f)
+           (if (redirector* req!op)
                (do (prn rdheader*)
-                   (prn "Location: " (f req!str req))
+                   (prn "Location: " (ff req!str req))
                    (prn))
-               (do (prn header*)
+               (do (prn (header* tty))
                    (awhen (max-age* req!op)
                      (prn "Cache-Control: max-age=" it))
-                   (f req!str req)))
+                   (ff req!str req))))
          (let filetype (static-filetype req!op)
            (aif (and filetype (some [file-exists (string _ req!op)] staticdirs*))
                 (do (prn (type-header* filetype))
@@ -373,7 +377,7 @@ Connection: close")
 
 (= dead-msg* "\nUnknown or expired link.")
  
-(defop-raw x (str req)
+(defop-raw x xhtml (str req)
   (w/stdout str 
     (aif (fns* (sym (arg req "fnid")))
          (it req)
@@ -387,7 +391,7 @@ Connection: close")
 ; For asynchronous calls; discards the page.  Would be better to tell
 ; the fn not to generate it.
 
-(defop-raw a (str req)
+(defop-raw a xhtml (str req)
   (aif (fns* (sym (arg req "fnid")))
        (tostring (it req))))
 

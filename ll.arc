@@ -95,23 +95,24 @@
 (= actionsdone* (table))
 ; format order date type data
 ; order can be used as a uuid; it is monotonically increasing
-(= actionqueue* (table))
-(= uuid2order* (table))
-(= order2uuid* (table))
+(= actionqueue* '())
+;(= uuid2order* (table))
+;(= order2uuid* (table))
 ; format uuid date type data
-(= uuidtop* 0)
-(= ordertop* 0)
+;(= uuidtop* 0)
+;(= ordertop* 0)
 (def addaction (ty da)
   (do
-    (= (order2uuid* (++ ordertop*)) (++ uuidtop*))
-    (= (uuid2order* uuidtop*) ordertop*)
-    (= (actionqueue* uuidtop*) (obj "order" ordertop* "date" "future" "type" ty "data" da))
+    ;(= (order2uuid* (++ ordertop*)) (++ uuidtop*))
+    ;(= (uuid2order* uuidtop*) ordertop*)
+    ;(= (actionqueue* uuidtop*) (obj "order" ordertop* "date" "future" "type" ty "data" da))
+    (= actionqueue* (join actionqueue* (list (obj "date" "future" "type" ty "data" da))))
   ))
 
-(defop addaction req
+(defoptext addaction req
   (do
     (addaction (arg req "ty") (arg req "da"))
-    pr req))
+    (prn "Success.")))
 
 (defopjson showactions req
   (tojson actionqueue*))

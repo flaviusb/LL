@@ -117,21 +117,22 @@
 (defopjson showactions req
   (tojson actionqueue*))
 
-; format {...,ord: {ty: name, da: data}, ...}
+(defopjson submitactions req
+  (do
+    (parse-actions (arg req "aq"))
+    (tojson (obj message 'success actions actionqueue*))))
+
+; format [...,{ty: name, da: data}, ...]
 (def parse-actions (json-data)
   ;assume this has been sanitized
   (do
-    (= uuidtop* 0)
-    (= ordertop* 0)
-    (= actionqueue* (table))
-    (= uuid2order* (table))
-    (= order2uuid* (table))
+    (= actionqueue* '())
     (let parsed-data (fromjson json-data)
-      ((for x 0 (len parsed-data)
-        (addaction (parsed-data.x "ty") (parsed_data.x "da")))))
+      (let end (- (len parsed-data) 1)
+      (if (>= end 0)
+        (for x 0 end
+          (addaction (parsed-data.x "ty") (parsed-data.x "da"))))))
   ))
-(defop aq req
-  ())
 
 (def make-reader ()
   ())
@@ -149,10 +150,12 @@
   (login-handler req 'login (list (fn (a b) "index.html") "index.html")))
 
 (mac actions ()
-  `(tag (div class "actions")
-    (tag (div class "deadactions"))
-    (tag (div class "liveactions"))
-  ))
+  `(tag (div class "containerthing")
+     (tag (div class "messagepane"))
+     (tag (div class "actions")
+       (tag (div class "deadactions"))
+       (tag (div class "liveactions"))
+   )))
 
 (defop aq req
   (page "Ascension Auckland: Action Queue" "style.css" ("jquery-1.3.2.min.js" "jquery-ui-1.7.2.custom.min.js" "standard.js")
@@ -161,13 +164,8 @@
 <![CDATA[
 $(document).ready(function(){
   actionise();
-  $.getJSON('http://localhost:8080/showactions',
-    function(data){
-      $.each(data, function(i,item){
-        addaction(item.type, item.data);
-      });
-    });
-  });
+  get_action_queue_from_server();
+});
 ]]>
 "))
          (header)

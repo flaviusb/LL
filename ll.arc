@@ -93,19 +93,9 @@
       (cacheize "static/about.text" "about.html" textize))))
 
 (= actionsdone* (table))
-; format order date type data
-; order can be used as a uuid; it is monotonically increasing
 (= actionqueue* '())
-;(= uuid2order* (table))
-;(= order2uuid* (table))
-; format uuid date type data
-;(= uuidtop* 0)
-;(= ordertop* 0)
 (def addaction (ty da)
   (do
-    ;(= (order2uuid* (++ ordertop*)) (++ uuidtop*))
-    ;(= (uuid2order* uuidtop*) ordertop*)
-    ;(= (actionqueue* uuidtop*) (obj "order" ordertop* "date" "future" "type" ty "data" da))
     (= actionqueue* (join actionqueue* (list (obj "date" "future" "type" ty "data" da))))
   ))
 
@@ -124,7 +114,7 @@
 
 ; format [...,{ty: name, da: data}, ...]
 (def parse-actions (json-data)
-  ;assume this has been sanitized
+  ;assume this has been sanitized for the moment
   (do
     (= actionqueue* '())
     (let parsed-data (fromjson json-data)

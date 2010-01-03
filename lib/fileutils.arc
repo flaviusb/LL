@@ -17,7 +17,7 @@
       `(do
          (let ,retdir ((ac-scheme current-directory))
          (do (cd ,path)
-             (do ,@block)
+             ,@block
              (cd ,retdir))))))
 
 (def makepath (base path)

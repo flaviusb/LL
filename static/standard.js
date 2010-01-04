@@ -14,6 +14,7 @@ function actionise()
          order[i] = {ty: divs[i].getAttribute("type"), da: divs[i].getAttribute("data")};
        }
        $(".liveactions").html("");
+       $(".deadactions").html("");
        var ostr = JSON.stringify(order);
        post_action_queue_to_server({aq: ostr});
      }
@@ -25,7 +26,10 @@ function get_action_queue_from_server()
   $(".messagepane").html("");
   $.getJSON('http://localhost:8080/showactions',
     function(data){
-      $.each(data, function(i,item){
+      $.each(data.pastactions, function(i,item){
+        addpastaction(item.type, item.data);
+      });
+      $.each(data.futureactions, function(i,item){
         addaction(item.type, item.data);
       });
     });
@@ -36,7 +40,10 @@ function post_action_queue_to_server(aq)
   $.getJSON('http://localhost:8080/submitactions', aq,
     function(data){
       $('.messagepane').html(data['message']);
-      $.each(data['actions'], function(i,item){
+      $.each(data.pastactions, function(i,item){
+        addpastaction(item.type, item.data);
+      });
+      $.each(data.futureactions, function(i,item){
         addaction(item.type, item.data);
       });
     });
@@ -52,3 +59,7 @@ function addaction(type, data)
   $(".liveactions").append(make_action_container(type, data));
 }
 
+function addpastaction(type, data)
+{
+  $(".deadactions").append(make_action_container(type, data));
+}

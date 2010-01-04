@@ -112,12 +112,12 @@
      (prn "No success.")))
 
 (defopjson showactions req
-  (tojson (actionqueue* get-user.req)))
+  (tojson (obj futureactions (actionqueue* get-user.req) pastactions (actionsdone* get-user.req)))
 
 (defopjson submitactions req
   (do
     (parse-actions get-user.req (arg req "aq"))
-    (tojson (obj message 'success actions (actionqueue* get-user.req)))))
+    (tojson (obj message 'success futureactions (actionqueue* get-user.req) pastactions (actionsdone* get-user.req)))))
 
 ; format [...,{ty: name, da: data}, ...]
 (def parse-actions (usr json-data)

@@ -3,7 +3,7 @@
 ;redefine ensure-dir here fo the moment
 (def ensure-dir (path)
   (unless (dir-exists path)
-    (mkdir ((ac-scheme regexp-split) "/" path))))
+    (makepath nil ((ac-scheme regexp-split) "/" path))))
 
 (mac page (title cssname jsname . body)
   `(do (gendoctype)

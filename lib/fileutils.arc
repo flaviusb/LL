@@ -31,10 +31,11 @@
   (makepath nil (cons first rest)))
 
 (def rm-rf (directory)
-  (do 
-    (w/cd directory
-      (each x ((ac-scheme directory-list))
-        (if ((ac-scheme file-exists?) x)
-            ((ac-scheme delete-file) x)
-            (rm-rf x))))
-    ((ac-scheme delete-directory) directory)))
+  (if ((ac-scheme directory-exists?) directory)
+    (do 
+      (w/cd directory
+        (each x ((ac-scheme directory-list))
+          (if ((ac-scheme file-exists?) x)
+              ((ac-scheme delete-file) x)
+              (rm-rf x))))
+      ((ac-scheme delete-directory) directory))))

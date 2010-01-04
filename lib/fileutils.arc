@@ -28,7 +28,7 @@
           (makepath car.path cdr.path)))))
 
 (def mkdir (first . rest)
-  (makepath nil first rest))
+  (makepath nil (cons first rest)))
 
 (def rm-rf (directory)
   (do 

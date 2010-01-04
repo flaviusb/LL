@@ -37,4 +37,4 @@
         (if ((ac-scheme file-exists?) x)
             ((ac-scheme delete-file) x)
             (rm-rf x))))
-    ((ac-scheme delete-directory) branch)))
+    ((ac-scheme delete-directory) directory)))

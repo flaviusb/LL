@@ -1,6 +1,6 @@
 (each x '("ac1.arc" "urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc" "fileutils.arc") (load (+ "lib/" x)))
 
-;redefine ensure-dir here fo the moment
+;redefine ensure-dir here for the moment
 (def ensure-dir (path)
   (unless (dir-exists path)
     (makepath nil ((ac-scheme regexp-split) "/" path))))
@@ -98,35 +98,37 @@
       (cacheize "static/about.text" "about.html" textize))))
 
 (= actionsdone* (table))
-(= actionqueue* '())
-(def addaction (ty da)
+(= actionqueue* (table))
+(def addaction (usr ty da)
   (do
-    (= actionqueue* (join actionqueue* (list (obj "date" "future" "type" ty "data" da))))
+    (= (actionqueue* usr) (join actionqueue* (list (obj "date" "future" "type" ty "data" da))))
   ))
 
 (defoptext addaction req
-  (do
-    (addaction (arg req "ty") (arg req "da"))
-    (prn "Success.")))
+  (if (~is get-user.req nil)
+    (do
+      (addaction (get-user req) (arg req "ty") (arg req "da"))
+      (prn "Success."))
+     (prn "No success.")))
 
 (defopjson showactions req
-  (tojson actionqueue*))
+  (tojson (actionqueue* get-user.req)))
 
 (defopjson submitactions req
   (do
-    (parse-actions (arg req "aq"))
-    (tojson (obj message 'success actions actionqueue*))))
+    (parse-actions get-user.req (arg req "aq"))
+    (tojson (obj message 'success actions (actionqueue* get-user.req)))))
 
 ; format [...,{ty: name, da: data}, ...]
-(def parse-actions (json-data)
+(def parse-actions (usr json-data)
   ;assume this has been sanitized for the moment
   (do
-    (= actionqueue* '())
+    (= (actionqueue* usr) '())
     (let parsed-data (fromjson json-data)
       (let end (- (len parsed-data) 1)
       (if (>= end 0)
         (for x 0 end
-          (addaction (parsed-data.x "ty") (parsed-data.x "da"))))))
+          (addaction usr (parsed-data.x "ty") (parsed-data.x "da"))))))
   ))
 
 (def make-reader ()

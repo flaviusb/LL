@@ -11,7 +11,6 @@
     (do ((ac-scheme current-directory) lastdir*)
         (= lastdir* templastdir))))
 
-;ch 19
 (mac w/cd (path . block)
   (w/uniq retdir
       `(do
@@ -31,6 +30,11 @@
 (def mkdir (first . rest)
   (makepath nil first rest))
 
-;(def rm (path)
-;  ((ac-scheme file-exists?)))
-
+(def rm-rf (directory)
+  (do 
+    (w/cd directory
+      (each x (dir)
+        (if ((ac-scheme file-exists?) x)
+            ((ac-scheme delete-file) x)
+            (rm-rf x))))
+    ((ac-scheme delete-directory) branch)))

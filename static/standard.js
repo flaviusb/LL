@@ -26,11 +26,13 @@ function get_action_queue_from_server()
   $(".messagepane").html("");
   $.getJSON('http://localhost:8080/showactions',
     function(data){
-      $.each(data.pastactions, function(i,item){
-        addpastaction(item.type, item.data);
+      $.each(data['pastactions'], function(i,item){
+        if (item.type)
+          addpastaction(item.type, item.data);
       });
-      $.each(data.futureactions, function(i,item){
-        addaction(item.type, item.data);
+      $.each(data['futureactions'], function(i,item){
+        if (item.type)
+          addaction(item.type, item.data);
       });
     });
 }
@@ -40,11 +42,13 @@ function post_action_queue_to_server(aq)
   $.getJSON('http://localhost:8080/submitactions', aq,
     function(data){
       $('.messagepane').html(data['message']);
-      $.each(data.pastactions, function(i,item){
-        addpastaction(item.type, item.data);
+      $.each(data['pastactions'], function(i,item){
+        if (item.type)
+          addpastaction(item.type, item.data);
       });
-      $.each(data.futureactions, function(i,item){
-        addaction(item.type, item.data);
+      $.each(data['futureactions'], function(i,item){
+        if (item.type)
+          addaction(item.type, item.data);
       });
     });
 }

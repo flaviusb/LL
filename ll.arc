@@ -101,7 +101,7 @@
 (= actionqueue* (table))
 (def addaction (usr ty da)
   (do
-    (= (actionqueue* usr) (join actionqueue* (list (obj "date" "future" "type" ty "data" da))))
+    (= (actionqueue* usr) (join (actionqueue* usr) (list (obj "date" "future" "type" ty "data" da))))
   ))
 
 (defoptext addaction req
@@ -112,12 +112,12 @@
      (prn "No success.")))
 
 (defopjson showactions req
-  (tojson (obj futureactions (actionqueue* get-user.req) pastactions (actionsdone* get-user.req)))
+  (tojson (obj futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing))))
 
 (defopjson submitactions req
   (do
     (parse-actions get-user.req (arg req "aq"))
-    (tojson (obj message 'success futureactions (actionqueue* get-user.req) pastactions (actionsdone* get-user.req)))))
+    (tojson (obj message 'success futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing)))))
 
 ; format [...,{ty: name, da: data}, ...]
 (def parse-actions (usr json-data)

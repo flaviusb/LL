@@ -33,7 +33,7 @@
 (def rm-rf (directory)
   (do 
     (w/cd directory
-      (each x (dir)
+      (each x ((ac-scheme directory-list))
         (if ((ac-scheme file-exists?) x)
             ((ac-scheme delete-file) x)
             (rm-rf x))))

@@ -21,7 +21,7 @@
 
 (def makepath (base path)
   (w/cd base
-    (if (~is car.path nil)
+    (if (and (~is car.path nil) (~is car.path ""))
         (do 
           (if (~dir-exists car.path)
             ((ac-scheme make-directory) car.path))

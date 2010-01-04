@@ -1,5 +1,10 @@
 (each x '("ac1.arc" "urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc" "fileutils.arc") (load (+ "lib/" x)))
 
+;redefine ensure-dir here fo the moment
+(def ensure-dir (path)
+  (unless (dir-exists path)
+    (mkdir ((ac-scheme regexp-split) "/" path))))
+
 (mac page (title cssname jsname . body)
   `(do (gendoctype)
        (tag (html xmlns "http://www.w3.org/1999/xhtml") 

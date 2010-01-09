@@ -144,16 +144,16 @@
 "<?xml version=\"1.0\"?>
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
  \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"))
+    
+(mac gentag args `(tag ,args))
 
-(mac gentag args (start-tag args))
-     
 (mac tag (spec . body)
   `(if ,(is body nil)
     ,(start-tag spec " /")
     (do ,(start-tag spec)
        ,@body
        ,(end-tag spec))))
-     
+ 
 (mac tag-if (test spec . body)
   `(if ,test
        (tag ,spec ,@body)
@@ -207,10 +207,10 @@
        (no (and (is (type val) 'string) (find #\@ val)))))
 
 (def br ((o n 1)) 
-  (repeat n (pr "<br>")) 
+  (repeat n (pr "<br />")) 
   (prn))
 
-(def br2 () (prn "<br><br>"))
+(def br2 () (prn "<br /><br />"))
 
 (mac center    body         `(tag center ,@body))
 (mac underline body         `(tag u ,@body))

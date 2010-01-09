@@ -15,6 +15,7 @@
          (tag (body)
            ,@body))))
 
+
 (= characters* (table))
 (= cabals* (table))
 
@@ -41,7 +42,7 @@
   `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ()
-  `(tag (p class "blue") (pr " ") (tag (span) (tag (a href "about")(pr "About")) (pr " ") (tag (a href "rules")(pr "House Rules")) (tag (div class "header")(if (get-user req) (character-header)
+  `(tag (p class "blue") (pr " ") (tag (span) (tag (a href "about")(pr "About")) (pr " ") (tag (a href "rules")(pr "House Rules")) (tag (div class "header")(if (and (~is req nil) (get-user req)) (character-header)
                                 (login-header))))))
 (defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
 
@@ -74,7 +75,6 @@
                   (do (disp str fo)
                       (disp str)))))))))
 
-; Not exactly portable code...
 (def clear-cache-directories ()
   (each x cachedirs* (do (rm-rf x) (mkdir x))))
 
@@ -167,5 +167,19 @@ $(document).ready(function(){
 "))
          (header)
          (actions))))
+
+; redefine login page for the moment; deal with this in a more ajaxy way in future
+;(def login-page (switch (o msg nil) (o afterward hello-page))
+;  (page "Log in" "style.css" ("jquery-1.3.2.min.js" "standard.js") (tag (div) 
+;    (let req nil (header)) 
+;    (pagemessage msg)
+;    (when (in switch 'login 'both)
+;      (login-form "Login" switch login-handler afterward)
+;      (hook 'login-form afterward)
+;      (br2))
+;    (when (in switch 'register 'both)
+;      (login-form "Create Account" switch create-handler afterward)))))
+
+
 
 (thread:serve 8080)

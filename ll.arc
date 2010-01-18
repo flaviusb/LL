@@ -97,22 +97,91 @@
       (header)
       (cacheize "static/about.text" "about.html" textize))))
 
-(= actionsdone* (table))
-(= actionqueue* (table))
-(def addaction (usr ty da)
+;(= actionsdone* (table))
+; per user; [pending, held, done, future], personal, retainer - [by ref], ally - [by fnidish]
+
+; set - called zf to avoid name collisions
+(def zf ()
+  (obj values (table) indices (table)))
+
+(def zfill fill
+    (let it (zf)
+      (do
+        (each x fill
+          (insert it x))
+        it)))
+(def insert (zfs val)
+  (do (if (is zfs nil) (= zfs (zf)))
+      (= (zfs!values (+ (len zfs!indices) 1)) val)
+      (= zfs!indices.val (+ (len zfs!indices) 1))
+      zfs))
+(def remove (zfs val)
+  (if (is zfs nil) (= zfs (zf))
+    (if (~is zfs!indices.val nil)
+      (do
+          (with (pivot zfs!indices.val length (len zfs!indices))
+                (for x pivot length
+                  (do (= zfs!values.x (zfs!values (+ x 1)))
+                      (unless (is zfs!values.x nil) (= (zfs!indices zfs!values.x) x)))))
+          (= zfs!indices.val nil)))))
+
+(def ∈ (el zfs)
+  (~is zfs!indices.el nil))
+(def set-member? (el zfs)
+  (∈ el zfs))
+
+(def ⊂ (zf1 zf2)
+  (let ret t
+    (do 
+      (each (y x) (zf1!values)
+        (aif (is zf2!indices.x nil) (= ret it)))
+       ret)))
+(def subset-of? (zf1 zf2)
+  (⊂ zf1 zf2))
+
+(def set->table (zfs)
+  zfs!values)
+
+;(def set->list (zfs)
+;  ())
+; multitable
+(def multitable ()
+  (obj tag->values (zf) value->tags (zf) tags (zf) values (zf)))
+(def +tag (mt tag val)
+  (do (zap insert mt!tags.tag t)
+      (zap insert mt!values.val t)
+      (zap insert mt!tag->values.tag val)
+      (zap insert mt!value->tags.val tag)))
+
+(def -tag (mt tag val)
+  (do (remove mt!tags->values.tag val)
+      (remove mt!values->tags.val val)))
+
+(def tags->values (mt . tags)
   (do
-    (= (actionqueue* usr) (join (actionqueue* usr) (list (obj "date" "future" "type" ty "data" da))))
+    (with (container (set->table (mt!tag->values car.tags)) acc (zf) tagset (zfill tags))
+      (do
+      (map prn (list container acc tagset))
+      (each (y x) container
+        (if (⊂ mt!value->tags.x tagset)
+            (zap insert acc x)))
+      acc))))
+
+(= actionqueues* (table))
+(def addaction (usr ty da loc)
+  (do
+    (= actionqueues*.usr.loc (join actionqueues*.usr.loc (list (obj "date" "future" "type" ty "data" da))))
   ))
 
 (defoptext addaction req
   (if (~is get-user.req nil)
     (do
-      (addaction (get-user req) (arg req "ty") (arg req "da"))
+      (addaction (get-user req) (arg req "ty") (arg req "da") (arg req "loc"))
       (prn "Success."))
      (prn "No success.")))
 
 (defopjson showactions req
-  (tojson (obj futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing))))
+  (tojson (obj futureactions (aif (actionqueues* get-user.req) it 'nothing) pastactions (aif (actionsdones* get-user.req) it 'nothing))))
 
 (defopjson submitactions req
   (do

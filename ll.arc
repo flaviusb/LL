@@ -27,7 +27,7 @@
   `(tag (div class "login")
    (if (tag (a href "#" onclick "ShowLogin()") (pr "Log in"))
    (tag (fieldset id "signing_menu" class "common-form")
-     (tag (form method "post" id "signin" action "http://localhost:8080/sessions")
+     (tag (form method "post" id "signin" action "/sessions")
        (tag (p) (tag (label for "u")(pr "Username"))
        (tag (input type "text" id "u" name "u" value "" title "u")))       
        (tag (p) (tag (label for "p")(pr "Password"))

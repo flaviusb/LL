@@ -110,6 +110,12 @@
         (each x fill
           (insert it x))
         it)))
+(def zfilll (fill)
+    (let it (zf)
+      (do
+        (each x fill
+          (insert it x))
+        it)))
 (def insert (zfs val)
   (do (if (is zfs nil) (= zfs (zf)))
       (= (zfs!values (+ (len zfs!indices) 1)) val)
@@ -133,8 +139,8 @@
 (def ⊂ (zf1 zf2)
   (let ret t
     (do 
-      (each (y x) (zf1!values)
-        (aif (is zf2!indices.x nil) (= ret it)))
+      (each (y x) zf1!values
+        (aif (is zf2!indices.x nil) (= ret (no it))))
        ret)))
 (def subset-of? (zf1 zf2)
   (⊂ zf1 zf2))
@@ -159,11 +165,11 @@
 
 (def tags->values (mt . tags)
   (do
-    (with (container (set->table (mt!tag->values car.tags)) acc (zf) tagset (zfill tags))
+    (with (container (set->table (mt!tag->values car.tags)) acc (zf) tagset (zfilll tags))
       (do
       (map prn (list container acc tagset))
       (each (y x) container
-        (if (⊂ mt!value->tags.x tagset)
+        (if (⊂ ((set->table mt!value->tags) x) tagset)
             (zap insert acc x)))
       acc))))
 

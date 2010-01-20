@@ -106,30 +106,30 @@
 
 (def zfill fill
     (let it (zf)
-      (do
-        (each x fill
-          (insert it x))
-        it)))
+       (each x fill
+         (insert it x))
+       it))
 (def zfilll (fill)
     (let it (zf)
-      (do
-        (each x fill
-          (insert it x))
-        it)))
+      (each x fill
+        (insert it x))
+      it))
 (def insert (zfs val)
   (do (if (is zfs nil) (= zfs (zf)))
       (= (zfs!values (+ (len zfs!indices) 1)) val)
       (= zfs!indices.val (+ (len zfs!indices) 1))
       zfs))
 (def remove (zfs val)
-  (if (is zfs nil) (= zfs (zf))
-    (if (~is zfs!indices.val nil)
-      (do
-          (with (pivot zfs!indices.val length (len zfs!indices))
-                (for x pivot length
-                  (do (= zfs!values.x (zfs!values (+ x 1)))
-                      (unless (is zfs!values.x nil) (= (zfs!indices zfs!values.x) x)))))
-          (= zfs!indices.val nil)))))
+  (do 
+    (if (is zfs nil) (= zfs (zf))
+      (if (~is zfs!indices.val nil)
+        (do
+            (with (pivot zfs!indices.val length (len zfs!indices))
+                  (for x pivot length
+                    (do (= zfs!values.x (zfs!values (+ x 1)))
+                        (unless (is zfs!values.x nil) (= (zfs!indices zfs!values.x) x)))))
+            (= zfs!indices.val nil))))
+    zfs))
 
 (def ∈ (el zfs)
   (~is zfs!indices.el nil))
@@ -138,10 +138,9 @@
 
 (def ⊂ (zf1 zf2)
   (let ret t
-    (do 
-      (each (y x) zf1!values
-        (aif (is zf2!indices.x nil) (= ret (no it))))
-       ret)))
+    (each (y x) zf1!values
+      (aif (is zf2!indices.x nil) (= ret (no it))))
+     ret))
 (def subset-of? (zf1 zf2)
   (⊂ zf1 zf2))
 
@@ -152,25 +151,26 @@
 ;  ())
 ; multitable
 (def multitable ()
-  (obj tag->values (zf) value->tags (zf) tags (zf) values (zf)))
+  (obj tag->values (table) value->tags (table) tags (table) values (table)))
 (def +tag (mt tag val)
   (do (zap insert mt!tags.tag t)
       (zap insert mt!values.val t)
       (zap insert mt!tag->values.tag val)
-      (zap insert mt!value->tags.val tag)))
+      (zap insert mt!value->tags.val tag)
+      mt))
 
 (def -tag (mt tag val)
-  (do (remove mt!tags->values.tag val)
-      (remove mt!values->tags.val val)))
+  (do (zap remove mt!tag->values.tag val)
+      (zap remove mt!value->tags.val val)
+      mt))
 
 (def tags->values (mt . tags)
   (do
     (with (container (set->table (mt!tag->values car.tags)) acc (zf) tagset (zfilll tags))
       (do
-      (map prn (list container acc tagset))
       (each (y x) container
-        (if (⊂ ((set->table mt!value->tags) x) tagset)
-            (zap insert acc x)))
+        (do (if (⊂ tagset (mt!value->tags x))
+              (zap insert acc x))))
       acc))))
 
 (= actionqueues* (table))

@@ -39,3 +39,6 @@
               ((ac-scheme delete-file) x)
               (rm-rf x))))
       ((ac-scheme delete-directory) directory))))
+
+(def mv (src dest)
+  ((ac-scheme rename-file-or-directory) src dest))

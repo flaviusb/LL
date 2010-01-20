@@ -145,7 +145,7 @@
   (⊂ zf1 zf2))
 
 (def set->table (zfs)
-  zfs!values)
+  (if zfs zfs!values (table)))
 
 ;(def set->list (zfs)
 ;  ())
@@ -168,10 +168,10 @@
   (do
     (with (container (set->table (mt!tag->values car.tags)) acc (zf) tagset (zfilll tags))
       (do
-      (each (y x) container
-        (do (if (⊂ tagset (mt!value->tags x))
-              (zap insert acc x))))
-      acc))))
+        (each (y x) container
+          (do (if (⊂ tagset (mt!value->tags x))
+                (zap insert acc x))))
+        acc))))
 
 (= actionqueues* (table))
 (def addaction (usr ty da loc)

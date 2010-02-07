@@ -218,6 +218,85 @@
 (mac defc ()
   ())
 
+(= charsheets* (multitable))
+; each charsheet should have an associated schema, and then be k,v pairs
+; keys must be strings, values may be number, list or table
+(def render-charsheet (charsheet) 
+  (charsheet!schema charsheet))
+
+(mac ret (name . body)
+  `(let ,name nil
+     ,@body
+     ,name))
+
+;(mac columns body
+;  `(tag (div) ,@(ret foo (each x body (= foo (join foo (list (list 'tag '(div class "column") x))))))))
+
+;(mac columns body
+;  `(join (list 'tag '(div)) (mappend [list (list 'tag '(div) _)] ',body)))
+(mac columns body
+  ``(tag (div) ,@(mappend [mappend [list (list 'tag '(div) _)] (eval _)] ',body)))
+
+
+(mac w/lets (var expr . body)
+  `(join '(let) '(,var) '(,expr)
+     ',body))
+(def columns2 (s) (eval (join '(columns) s)))
+
+(def mage-charsheet (charsheet)
+  (let val nil
+  (tag (div)
+  (do (each (k v) charsheet!attributes (push (list 'prn (string k " " v)) val))
+      (columns2 val)))))
+
+; page &body
+; gold-body :title title-element :body &body
+; columns &body
+; dots number max
+
+(= attributeblock* '((Intelligence Wits Resolve) (Strength Dexterity Stamina) (Presence Manipulation Composure)))
+(= skillblock* '((Mental (Academics Computer Crafts Investigation Medicine Occult Politics Science)) (Physical (Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry)) (Social (Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge))))
+
+(mac locap-string body
+  (tag (span class "locap") (pr (string body))))
+
+(mac norm-string body
+  (tag (span class "norm") (pr (string body))))
+
+(def dots (name value out-of)
+  (tag (span) (for x 1 value (tag (div class "black-dot"))) (for x value out-of (tag (a href (string "javascript: click_dot('" name "', '" x "');")) (tag (div class "white-dot"))))))
+
+;(mac mac/k (name lst . body)) 
+;(mac/k () )
+
+(mac gold-box args
+  (with (flag 'test title nil body nil)
+    (each x args
+      (if (is flag 'test) 
+        (if (is x ':title)
+          (= flag 'title)
+          (if (is x ':body)
+            (= flag 'body)))
+        (if (is flag 'title)
+          (do (= flag 'test) (push x title))
+          (if (is flag 'body)
+            (do (= flag 'test) (push x body))))))
+    `(tag (div class "gold-box")
+      (tag (span) ,@title)
+      (tag (br))
+      (tag (div) ,@body))))
+(page
+(gold-box :title (locap-string Attributes)
+  :body (columns 
+            (map1 [list 'locap-string _] '(Power Finesse Resistance))
+            (mappend [map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)] _] attributeblock*))
+(gold-box :title ((locap-string Skills) spring (locap-string Other\ Traits))
+  :body (columns
+            (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)
+            ))
+))
+
+
 (clear-cache-directories)
 (load-userinfo)
 

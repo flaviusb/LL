@@ -177,9 +177,11 @@
         acc))))
 
 (= actionqueues* (table))
+; each action queue is a multitable of type/data pairs, with type, date, and location tags
 (def addaction (usr ty da loc)
   (do
-    (= actionqueues*.usr.loc (join actionqueues*.usr.loc (list (obj "date" "future" "type" ty "data" da))))
+      (+tag actionqueues*.usr ty  (list "type" ty "data" da))
+      (+tag actionqueues*.usr loc (list "type" ty "data" da))
   ))
 
 (defoptext addaction req

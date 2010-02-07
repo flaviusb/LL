@@ -153,7 +153,10 @@
 (def multitable ()
   (obj tag->values (table) value->tags (table) tags (table) values (table)))
 (def +tag (mt tag val)
-  (do (zap insert mt!tags.tag t)
+  (do
+      (if (is mt nil)
+        (= mt (multitable)))
+      (zap insert mt!tags.tag t)
       (zap insert mt!values.val t)
       (zap insert mt!tag->values.tag val)
       (zap insert mt!value->tags.val tag)

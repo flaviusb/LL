@@ -245,12 +245,6 @@
      ',body))
 (def columns2 (s) (eval (join '(columns) s)))
 
-(def mage-charsheet (charsheet)
-  (let val nil
-  (tag (div)
-  (do (each (k v) charsheet!attributes (push (list 'prn (string k " " v)) val))
-      (columns2 val)))))
-
 ; page &body
 ; gold-body :title title-element :body &body
 ; columns &body
@@ -260,43 +254,48 @@
 (= skillblock* '((Mental (Academics Computer Crafts Investigation Medicine Occult Politics Science)) (Physical (Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry)) (Social (Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge))))
 
 (mac locap-string body
-  (tag (span class "locap") (pr (string body))))
+  `(tag (span class "locap") (pr (string ',body))))
 
 (mac norm-string body
-  (tag (span class "norm") (pr (string body))))
+  `(tag (span class "norm") (pr (string ',body))))
 
 (def dots (name value out-of)
   (tag (span) (for x 1 value (tag (div class "black-dot"))) (for x value out-of (tag (a href (string "javascript: click_dot('" name "', '" x "');")) (tag (div class "white-dot"))))))
 
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )
+(def spring () (tag (span class "stretch")))
+(mac centered body `(tag (span class "centered") ,@body))
 
 (mac gold-box args
   (with (flag 'test title nil body nil)
     (each x args
-      (if (is flag 'test) 
-        (if (is x ':title)
-          (= flag 'title)
-          (if (is x ':body)
-            (= flag 'body)))
-        (if (is flag 'title)
-          (do (= flag 'test) (push x title))
-          (if (is flag 'body)
-            (do (= flag 'test) (push x body))))))
+      (case flag
+        test    (case x
+                  :title (= flag ':title)
+                  @title (= flag '@title)
+                  :body  (= flag ':body)
+                  @body  (= flag '@body))
+        :title  (do (= flag 'test) (push x title))
+        @title  (do (= flag 'test) (zap join title x))
+        :body   (do (= flag 'test) (push x body))
+        @body   (do (= flag 'test) (zap join body x))))
     `(tag (div class "gold-box")
       (tag (span) ,@title)
       (tag (br))
       (tag (div) ,@body))))
-(page
-(gold-box :title (locap-string Attributes)
-  :body (columns 
-            (map1 [list 'locap-string _] '(Power Finesse Resistance))
-            (mappend [map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)] _] attributeblock*))
-(gold-box :title ((locap-string Skills) spring (locap-string Other\ Traits))
-  :body (columns
-            (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)
-            ))
-))
+
+(def mage-charsheet (charsheet)
+  (page
+    (gold-box :body (columns ))
+    (gold-box :title (locap-string Attributes)
+      :body (eval (columns 
+                (map1 [list 'locap-string _] '(Power Finesse Resistance))
+                (mappend [map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)] _] attributeblock*))))
+    (gold-box @title ((locap-string Skills) (spring) (locap-string Other\ Traits))
+      :body (eval (columns
+                (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)
+                )))))
 
 
 (clear-cache-directories)

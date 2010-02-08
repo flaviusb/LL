@@ -253,6 +253,11 @@
 (= attributeblock* '((Intelligence Wits Resolve) (Strength Dexterity Stamina) (Presence Manipulation Composure)))
 (= skillblock* '((Mental (Academics Computer Crafts Investigation Medicine Occult Politics Science)) (Physical (Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry)) (Social (Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge))))
 
+(= charsheets* (table))
+(= (charsheets* "foo") (obj attributes (table) skills (table)))
+(each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (coerce (* (rand) 5) 'int)))
+(each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
+
 (mac locap-string body
   `(tag (span class "locap") (pr (string ',body))))
 
@@ -260,7 +265,7 @@
   `(tag (span class "norm") (pr (string ',body))))
 
 (def dots (name value out-of)
-  (tag (span) (for x 1 value (tag (div class "black-dot"))) (for x value out-of (tag (a href (string "javascript: click_dot('" name "', '" x "');")) (tag (div class "white-dot"))))))
+  (tag (span) (for x 1 value (tag (img src "black-dot.png"))) (for x value out-of (tag (a href (string "javascript: click_dot('" name "', '" x "');")) (tag (img src "white-dot.png"))))))
 
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )
@@ -286,16 +291,21 @@
       (tag (div) ,@body))))
 
 (def mage-charsheet (charsheet)
-  (page
+  (with (bod1 (eval (join '(columns) (list:list 'quote (join  
+                (list (join (list 'tag '(div)) (map1 [list 'locap-string _] '(Power Finesse Resistance))))
+                (map1 [join (list 'tag '(div)) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)] _)] attributeblock*)))))
+        bod2 (eval (join '(columns) (list:list 'quote
+                (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)))))
+  (tag (div)
     (gold-box :body (columns ))
     (gold-box :title (locap-string Attributes)
-      :body (eval (columns 
-                (map1 [list 'locap-string _] '(Power Finesse Resistance))
-                (mappend [map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)] _] attributeblock*))))
+      :body (eval bod1))
     (gold-box @title ((locap-string Skills) (spring) (locap-string Other\ Traits))
-      :body (eval (columns
-                (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)
-                )))))
+      :body (eval bod2)))))
+
+(defop mage-charsheet req
+  (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
+    (let cs (charsheets* get-user.req) (mage-charsheet cs))))
 
 
 (clear-cache-directories)

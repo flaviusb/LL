@@ -236,8 +236,9 @@
 
 ;(mac columns body
 ;  `(join (list 'tag '(div)) (mappend [list (list 'tag '(div) _)] ',body)))
+
 (mac columns body
-  ``(tag (div) ,@(mappend [mappend [list (list 'tag '(div) _)] (eval _)] ',body)))
+  ``(tag (div class "columns") ,@(mappend [mappend [list (list 'tag '(div class "column") _)] (eval _)] ',body)))
 
 
 (mac w/lets (var expr . body)
@@ -292,8 +293,8 @@
 
 (def mage-charsheet (charsheet)
   (with (bod1 (eval (join '(columns) (list:list 'quote (join  
-                (list (join (list 'tag '(div)) (map1 [list 'locap-string _] '(Power Finesse Resistance))))
-                (map1 [join (list 'tag '(div)) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)] _)] attributeblock*)))))
+                (list (join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'locap-string _) '(tag (br))] '(Power Finesse Resistance))))
+                (map1 [join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)) '(tag (br))] _) '(tag (br))] attributeblock*)))))
         bod2 (eval (join '(columns) (list:list 'quote
                 (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)))))
   (tag (div)

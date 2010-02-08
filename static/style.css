@@ -8,3 +8,6 @@ img.logo {
 .common-form {
     display: none;
 }
+div.columns { display: inline; }
+div.column { float: left; width: 25em;}
+div.goldbox { clear: both; }

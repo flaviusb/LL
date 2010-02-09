@@ -238,7 +238,7 @@
 ;  `(join (list 'tag '(div)) (mappend [list (list 'tag '(div) _)] ',body)))
 
 (mac columns body
-  ``(tag (div class "columns") ,@(mappend [mappend [list (list 'tag '(div class "column") _)] (eval _)] ',body)))
+  ``(tag (div class "columns") ,@(mappend [mappend [list (list 'tag '(div class "column") _)] (eval _)] ',body) (prn)))
 
 
 (mac w/lets (var expr . body)
@@ -271,7 +271,8 @@
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )
 (def spring () (tag (span class "stretch")))
-(mac centered body `(tag (span class "centered") ,@body))
+(mac centered body `(tag (div class "centered") ,@body))
+(mac right-align body `(tag (span class "right-align") ,@body))
 
 (mac gold-box args
   (with (flag 'test title nil body nil)
@@ -295,16 +296,16 @@
   (with (bod1 (eval (join '(columns) (list:list 'quote (join  
                 (list (join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'locap-string _) '(tag (br))] '(Power Finesse Resistance))))
                 (map1 [join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)) '(tag (br))] _) '(tag (br))] attributeblock*)))))
-        bod2 (eval (join '(columns) (list:list 'quote
+        bod2 (eval (join '(columns) (list:list 'quote   
                 (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)))))
   (tag (div)
     (gold-box :body (columns ))
-    (gold-box :title (locap-string Attributes)
+    (gold-box :title (centered:locap-string Attributes)
       :body (eval bod1))
-    (gold-box @title ((locap-string Skills) (spring) (locap-string Other\ Traits))
+    (gold-box @title ((locap-string Skills)  (right-align:locap-string Other\ Traits))
       :body (eval bod2)))))
 
-(defop mage-charsheet req
+(defop cs req
   (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
     (let cs (charsheets* get-user.req) (mage-charsheet cs))))
 

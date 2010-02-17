@@ -1,9 +1,22 @@
+/* Makeshift CSS Reset */
+{
+  margin: 0;
+  padding: 0;
+}
+
+/* Tell the browser to render HTML 5 elements as block */
+header, footer, aside, nav, article {
+  display: block;
+}
+
+
 p.blue   { background-color: gray; }
 div.header { float: right; } 
 img.logo {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    clear: both;
  }
 .common-form {
     display: none;
@@ -12,4 +25,52 @@ div.columns { display: inline; width: 95% }
 div.column { float: left; width: auto; margin: 3em; }
 div.gold-box { clear: both; width: 100%; }
 div.centered { margin-left: auto; margin-right: auto; display: block; }
-span.right-align { float: right; width: auto; }
+.right-align { float: right; width: auto; }
+.login { float: right; width: auto; }
+.generated-text { margin-top: 100px; padding: 50px; margin-left: 180px; margin-right: 180px; display: block; }
+
+nav {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: blue;
+}
+
+nav ul {  
+  margin: 0 auto;  
+  width: 940px;  
+  list-style: none;  
+}
+
+nav ul li {
+	float: left;
+}
+
+	nav ul li a {
+		display: block;
+		margin-right: 20px;
+		width: 140px;
+		font-size: 14px;
+		line-height: 44px;
+		text-align: center;
+		text-decoration: none;
+		color: black;
+	}
+
+		nav ul li a:hover {
+			color: #fff;
+		}
+
+		nav ul li.selected a {
+			color: #fff;
+		}
+
+		nav ul li.subscribe a {
+			margin-left: 22px;
+			padding-left: 33px;
+			text-align: left;
+			background: url("rss.png") left center no-repeat;
+		}
+  
+
+

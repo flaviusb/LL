@@ -24,7 +24,7 @@
 ;response
 
 (mac login-header ()
-  `(tag (div class "login")
+  `(tag (li class "login")
    (if (tag (a href "#" onclick "ShowLogin()") (pr "Log in"))
    (tag (fieldset id "signing_menu" class "common-form")
      (tag (form method "post" id "signin" action "/sessions")
@@ -38,13 +38,17 @@
      )
    ))))
 
+(mac navit (loc text)
+  `(tag (li) (tag (a href ,(string loc)) (pr ,(string text)))))
+
 (mac character-header ()
-  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
+  `(do (navit "aq" "Action Queue") (navit "cs" "Character Sheet") (tag (li class "right-align") (w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))) nil))
+;  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ()
-  `(tag (p class "blue") (pr " ") (tag (span) (tag (a href "about")(pr "About")) (pr " ") (tag (a href "rules")(pr "House Rules")) (tag (div class "header")(if (and (~is req nil) (get-user req)) (character-header)
-                                (login-header))))))
-(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (tag (div) (header) (tag h1 (pr "Nexus")) (tag (div)(tag (img class "logo" src "NexusLogo.png"))))))
+  `(tag (nav) (tag (ul) (navit "about" "About") (navit "rules" "House Rules") (if (and (~is req nil) (get-user req)) (character-header)
+     (login-header)))))
+(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (br) (tag (img class "logo" src "NexusLogo.png")))))
 
 (defopr index.html req #\/)
 
@@ -87,15 +91,15 @@
 
 (defop rules req
   (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.min.js" "standard.js")
-    (tag (div)
+    (+
       (header)
-      (cacheize "static/rules.text" "rules.html" textize))))
+      (tag (section class "generated-text") (cacheize "static/rules.text" "rules.html" textize)))))
 
 (defop about req
   (page "About Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js")
-    (tag (div)
+    (+
       (header)
-      (cacheize "static/about.text" "about.html" textize))))
+      (tag (section class "generated-text") (cacheize "static/about.text" "about.html" textize)))))
 
 ;(= actionsdone* (table))
 ; per user; [pending, held, done, future], personal, retainer - [by ref], ally - [by fnidish]
@@ -192,17 +196,27 @@
      (prn "No success.")))
 
 (defopjson showactions req
-  (tojson (obj futureactions (aif (actionqueues* get-user.req) it 'nothing) pastactions (aif (actionsdones* get-user.req) it 'nothing))))
+  (tojson (obj futureactions (aif (actionqueues* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing))))
 
 (defopjson submitactions req
   (do
     (parse-actions get-user.req (arg req "aq"))
     (tojson (obj message 'success futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing)))))
 
+(= waitinglist* (table))
+(mac w/touching (id . body)
+  `(do1
+     (do
+       ,@body
+     )
+     (aif (waitinglist* id)
+       (each x it
+         (wake x)))))
+
 ; format [...,{ty: name, da: data}, ...]
 (def parse-actions (usr json-data)
   ;assume this has been sanitized for the moment
-  (do
+  (w/touching usr
     (= (actionqueue* usr) '())
     (let parsed-data (fromjson json-data)
       (let end (- (len parsed-data) 1)
@@ -266,7 +280,7 @@
   `(tag (span class "norm") (pr (string ',body))))
 
 (def dots (name value out-of)
-  (tag (span) (for x 1 value (tag (img src "black-dot.png"))) (for x value out-of (tag (a href (string "javascript: click_dot('" name "', '" x "');")) (tag (img src "white-dot.png"))))))
+  (tag (span) (for x 1 value (tag (a href (string "javascript:click_dot('" name "', " value ");")) (tag (img src "black-dot.png")))) (for x (+ value 1) out-of (tag (a href (string "javascript:click_dot('" name "', " x "); alert('" name "/" x "');")) (tag (img id (string name "/" x) src "white-dot.png"))))))
 
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )
@@ -295,19 +309,20 @@
 (def mage-charsheet (charsheet)
   (with (bod1 (eval (join '(columns) (list:list 'quote (join  
                 (list (join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'locap-string _) '(tag (br))] '(Power Finesse Resistance))))
-                (map1 [join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!attributes._ 5)) '(tag (br))] _) '(tag (br))] attributeblock*)))))
-        bod2 (eval (join '(columns) (list:list 'quote   
-                (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)))))
+                (map1 [join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'tag '(span) (list 'norm-string _) (list 'dots (string "attributes/" _) charsheet!attributes._ 5)) '(tag (br))] _) '(tag (br))] attributeblock*)))))
+        bod2 (eval (join '(columns) (list:list 'quote 
+                (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string "skills/" _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)))))
   (tag (div)
     (gold-box :body (columns ))
     (gold-box :title (centered:locap-string Attributes)
       :body (eval bod1))
     (gold-box @title ((locap-string Skills)  (right-align:locap-string Other\ Traits))
       :body (eval bod2)))))
-
+(defopjson csjson req
+  (tojson (charsheets* get-user.req)))
 (defop cs req
   (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
-    (let cs (charsheets* get-user.req) (mage-charsheet cs))))
+    (let cs (charsheets* get-user.req) (tag (div) (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs)))))
 
 
 (clear-cache-directories)
@@ -323,6 +338,9 @@
        (tag (div class "deadactions"))
        (tag (div class "liveactions"))
    )))
+
+(defop longpoll req
+  ())
 
 (defop aq req
   (page "Ascension Auckland: Action Queue" "style.css" ("jquery-1.3.2.min.js" "jquery-ui-1.7.2.custom.min.js" "standard.js")

@@ -1,6 +1,105 @@
+var charsheet = null, charsheetadjusted = null;
+
+function initialise_charsheet()
+{
+  $.getJSON('http://localhost:8080/csjson',
+    function(data){
+      charsheet = data;
+      charsheetadjusted = data;
+    }); 
+}
+
+function path_walker(root, path)
+{
+  if (path && path.length > 0)
+  {
+    var foo = path.shift();
+    return path_walker(root[foo], path);
+  }
+  return root;
+}
+
+function path_set(root, path, value)
+{
+  switch (path.length)
+  {
+    case 0:
+      root = value;
+      break;
+    case 1:
+      root[path[0]] = value;
+      break;
+    case 2:
+      root[path[0]][path[1]] = value;
+      break;
+  }
+  return root;
+}
+
+function path_get(root, path)
+{
+  switch (path.length)
+  {
+    case 0:
+      return root;
+      break;
+    case 1:
+      return root[path[0]];
+      break;
+    case 2:
+      return root[path[0]][path[1]];
+      break;
+  }
+  return null;
+}
+
+
+function click_dot(name, value)
+{
+  var path = name.split("/");
+  alert(JSON.stringify(path));
+  var base = path_get(charsheet, path);
+  var adj  = path_get(charsheetadjusted, path);
+  alert(JSON.stringify(charsheetadjusted));
+  var extent = (adj < value) ? value : adj;
+  alert(extent);
+  if (adj == value)
+    return;
+  if (value <= base)
+    charsheetadjusted = path_set(charsheetadjusted, path, base);
+  else
+    charsheetadjusted = path_set(charsheetadjusted, path, value);
+  alert(JSON.stringify(charsheetadjusted));
+  for (var i = 1; i <= extent; i++)
+  {
+    alert(name + "/" + i);
+    if (i <= value)
+      document.getElementById(name + '/' + i).src = 'orange-dot.png';
+    else
+      document.getElementById(name + "/" + i).src = 'white-dot.png';
+  }
+}
+
 function ShowLogin()
 {
   $(".common-form").show("slow");
+}
+
+function get_aq_structure_from_server()
+{
+}
+
+function pull_from_server()
+{
+}
+
+function push_to_server()
+{
+}
+
+function openlongpoll()
+{
+
 }
 
 function actionise()

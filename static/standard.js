@@ -57,22 +57,22 @@ function path_get(root, path)
 function click_dot(name, value)
 {
   var path = name.split("/");
-  alert(JSON.stringify(path));
-  var base = path_get(charsheet, path);
-  var adj  = path_get(charsheetadjusted, path);
-  alert(JSON.stringify(charsheetadjusted));
+  //alert(JSON.stringify(path));
+  var base = parseInt(path_get(charsheet, path));
+  var adj  = parseInt(path_get(charsheetadjusted, path));
+  //alert(JSON.stringify(charsheetadjusted));
   var extent = (adj < value) ? value : adj;
-  alert(extent);
+  //alert(extent);
   if (adj == value)
     return;
   if (value <= base)
     charsheetadjusted = path_set(charsheetadjusted, path, base);
   else
     charsheetadjusted = path_set(charsheetadjusted, path, value);
-  alert(JSON.stringify(charsheetadjusted));
-  for (var i = 1; i <= extent; i++)
+  //alert(JSON.stringify(charsheetadjusted));
+  for (var i = base + 1; i <= extent; i++)
   {
-    alert(name + "/" + i);
+    //alert(name + "/" + i);
     if (i <= value)
       document.getElementById(name + '/' + i).src = 'orange-dot.png';
     else

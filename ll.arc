@@ -280,7 +280,7 @@
   `(tag (span class "norm") (pr (string ',body))))
 
 (def dots (name value out-of)
-  (tag (span) (for x 1 value (tag (a href (string "javascript:click_dot('" name "', " value ");")) (tag (img src "black-dot.png")))) (for x (+ value 1) out-of (tag (a href (string "javascript:click_dot('" name "', " x "); alert('" name "/" x "');")) (tag (img id (string name "/" x) src "white-dot.png"))))))
+  (tag (span) (for x 1 value (tag (a href (string "javascript:click_dot('" name "', " value ");")) (tag (img src "black-dot.png")))) (for x (+ value 1) out-of (tag (a href (string "javascript:click_dot('" name "', " x ");")) (tag (img id (string name "/" x) src "white-dot.png"))))))
 
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )

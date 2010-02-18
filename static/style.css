@@ -1,9 +1,3 @@
-/* Makeshift CSS Reset */
-/*{
-  margin: 0;
-  padding: 0;
-}*/
-
 /* Tell the browser to render HTML 5 elements as block */
 header, footer, aside, nav, article {
   display: block;
@@ -30,6 +24,10 @@ div.centered { margin-left: auto; margin-right: auto; display: block; }
 .generated-text { margin-top: 100px; padding: 50px; margin-left: 180px; margin-right: 180px; display: block; }
 .charsheet { margin-top: 100px; padding: 50px; margin-left: 80px; margin-right: 80px; display: block; }
 
+a img {
+  border: 0;
+}
+
 nav {
   position: absolute;
   left: 0;
@@ -44,34 +42,30 @@ nav ul {
 }
 
 nav ul li {
-	float: left;
+  float: left;
 }
 
-	nav ul li a {
-		display: block;
-		margin-right: 20px;
-		width: 140px;
-		font-size: 14px;
-		line-height: 44px;
-		text-align: center;
-		text-decoration: none;
-		color: black;
-	}
+nav ul li a {
+  display: block;
+  margin-right: 20px;
+  width: 140px;
+  font-size: 14px;
+  line-height: 44px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+}
 
-		nav ul li a:hover {
-			color: #fff;
-		}
+nav ul li a:hover {
+  color: #fff;
+}
 
-		nav ul li.selected a {
-			color: #fff;
-		}
-
-		nav ul li.subscribe a {
-			margin-left: 22px;
-			padding-left: 33px;
-			text-align: left;
-			background: url("rss.png") left center no-repeat;
-		}
-  
-
-
+nav ul li.selected a {
+  color: #fff;
+}
+nav ul li.subscribe a {
+  margin-left: 22px;
+  padding-left: 33px;
+  text-align: left;
+  background: url("rss.png") left center no-repeat;
+}

@@ -82,12 +82,15 @@
 (def clear-cache-directories ()
   (each x cachedirs* (do (rm-rf x) (mkdir x))))
 
+(def shellesc (str)
+  ((ac-scheme regexp-replace*) "([\"])" str "\\\\"))
+
 (def textize (fi)
-    (let temp ""
-      (do (whilet li (eschr readc.fi) (= temp (+ temp li)))
-          (= temp ((ac-scheme regexp-replace*) "^h([1234]). ([^\n]*)<br />\n" temp "<h\\1>\\2</h\\1>\n"))
-          (= temp ((ac-scheme regexp-replace*) "\nh([1234]). ([^\n]*)<br />\n" temp "\n<h\\1>\\2</h\\1>\n"))
-          temp)))
+    (with (temp "" pipe nil acc "")
+      (do (whilet li readc.fi (= temp (+ temp li)))
+          (= pipe (pipe-from:string  "echo \"" shellesc.temp "\" | markdown -T "))
+          (whilet lj readc.pipe (= acc (+ acc lj)))
+          acc)))
 
 (defop rules req
   (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.min.js" "standard.js")

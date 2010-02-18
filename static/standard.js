@@ -4,8 +4,8 @@ function initialise_charsheet()
 {
   $.getJSON('http://localhost:8080/csjson',
     function(data){
-      charsheet = data;
-      charsheetadjusted = data;
+      charsheet = JSON.parse(JSON.stringify(data));
+      charsheetadjusted = JSON.parse(JSON.stringify(data));
     }); 
 }
 
@@ -62,21 +62,26 @@ function click_dot(name, value)
   var adj  = parseInt(path_get(charsheetadjusted, path));
   //alert(JSON.stringify(charsheetadjusted));
   var extent = (adj < value) ? value : adj;
-  //alert(extent);
+  //alert("Value: " + value + ", Extent: " + extent + "Base: " + base);
   if (adj == value)
-    return;
-  if (value <= base)
-    charsheetadjusted = path_set(charsheetadjusted, path, base);
-  else
-    charsheetadjusted = path_set(charsheetadjusted, path, value);
+  {
+    // In this case, toggle
+    value--;
+  }
+  //if (value <= base)
+  //  charsheetadjusted = path_set(charsheetadjusted, path, base);
+  //else
+  charsheetadjusted = path_set(charsheetadjusted, path, value);
   //alert(JSON.stringify(charsheetadjusted));
   for (var i = base + 1; i <= extent; i++)
   {
     //alert(name + "/" + i);
     if (i <= value)
+    {
       document.getElementById(name + '/' + i).src = 'orange-dot.png';
-    else
-      document.getElementById(name + "/" + i).src = 'white-dot.png';
+    } else {
+      document.getElementById(name + '/' + i).src = 'white-dot.png';
+    }
   }
 }
 

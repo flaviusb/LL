@@ -1,8 +1,8 @@
 /* Makeshift CSS Reset */
-{
+/*{
   margin: 0;
   padding: 0;
-}
+}*/
 
 /* Tell the browser to render HTML 5 elements as block */
 header, footer, aside, nav, article {
@@ -28,6 +28,7 @@ div.centered { margin-left: auto; margin-right: auto; display: block; }
 .right-align { float: right; width: auto; }
 .login { float: right; width: auto; }
 .generated-text { margin-top: 100px; padding: 50px; margin-left: 180px; margin-right: 180px; display: block; }
+.charsheet { margin-top: 100px; padding: 50px; margin-left: 80px; margin-right: 80px; display: block; }
 
 nav {
   position: absolute;

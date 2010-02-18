@@ -322,7 +322,8 @@
   (tojson (charsheets* get-user.req)))
 (defop cs req
   (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
-    (let cs (charsheets* get-user.req) (tag (div) (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs)))))
+    (let cs (charsheets* get-user.req) 
+      (+ (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs))))))
 
 
 (clear-cache-directories)

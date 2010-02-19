@@ -4,16 +4,32 @@ header, footer, aside, nav, article {
 }
 
 
-p.blue   { background-color: gray; }
 div.header { float: right; } 
 img.logo {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    clear: both;
- }
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
+}
 .common-form {
-    display: none;
+  -moz-border-radius-bottomleft:5px;
+  -moz-border-radius-bottomright:5px;
+  -webkit-border-bottom-left-radius:5px;
+  -webkit-border-bottom-right-radius:5px;
+  display:none;
+  background-color:blue;
+  position:absolute;
+  width:210px;
+  z-index:100;
+  border:1px transparent;
+  text-align:left;
+  padding:10px;
+  margin-left:-1px;
+  margin-top:-1px;
+  font-size: 14px;
+}
+.common-form input {
+  border: 1px transparent;
 }
 div.columns { display: inline; width: 95% }
 div.column { float: left; width: auto; margin: 3em; }

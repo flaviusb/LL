@@ -1,4 +1,5 @@
 var charsheet = null, charsheetadjusted = null;
+var loginshowing = false;
 
 function initialise_charsheet()
 {
@@ -87,7 +88,11 @@ function click_dot(name, value)
 
 function ShowLogin()
 {
-  $(".common-form").show("slow");
+  loginshowing = !loginshowing;
+  if(loginshowing)
+    $(".common-form").show("slow");
+  else
+    $(".common-form").hide("slow");
 }
 
 function get_aq_structure_from_server()

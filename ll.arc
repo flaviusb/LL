@@ -4,9 +4,14 @@
 (def ensure-dir (path)
   (unless (dir-exists path)
     (makepath nil ((ac-scheme regexp-split) "/" path))))
-(if (dir-exists "vcstatic")
+
+(def vcpull ()
+  (if (dir-exists "vcstatic")
     (system "cd vcstatic && git pull") 
-    (system "git clone git://github.com/flaviusb/vcstatic.git"))
+    (system "git clone git://github.com/flaviusb/vcstatic.git")))
+(vcpull)
+(defoptext force-update req
+  (do (vcpull) "Done."))
 
 (mac page (title cssname jsname . body)
   `(do (gendoctype)

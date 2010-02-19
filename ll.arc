@@ -334,9 +334,15 @@
 (defopjson csjson req
   (tojson (charsheets* get-user.req)))
 (defopl cs req
-  (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
-    (let cs (charsheets* get-user.req) 
-      (+ (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs))))))
+  (if (admin get-user.req)
+    (page "Ascension Auckland: Character sheets" "Style.css" ("jquery-1.3.2.min.js" "standard.js")
+      (each (k v) tablist.hpasswords* (tag span (pr k " ")
+               (if (charsheets* k)
+                 (+ (tag (a href (+ "cs?view=" k))  (pr "View character sheet")))
+                 (+ (tag (a href (+ "cs?create=" k))(pr "Create blank character sheet") )) )) (tag br))  )
+    (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
+      (let cs (charsheets* get-user.req) 
+        (+ (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs)))))))
 
 
 (clear-cache-directories)

@@ -351,7 +351,7 @@
 (defopr sessions req
   (logout-user (get-user req))
   (aif (good-login (arg req "u") (arg req "p") req!ip)
-       (login it req!ip (user->cookie* it) (list (fn (a b) (arg req "goto")) (arg req "goto")))
+       (login it req!ip (user->cookie* it) (list (fn (a b) (aif (arg req "goto") it "index.html")) (aif (arg req "goto") it "index.html")))
        (failed-login 'login "Bad login." (list (fn (a b) "index.html") "index.html"))))
 
 (mac actions ()

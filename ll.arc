@@ -333,7 +333,7 @@
       :body (eval bod2)))))
 (defopjson csjson req
   (tojson (charsheets* get-user.req)))
-(defop cs req
+(defopl cs req
   (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
     (let cs (charsheets* get-user.req) 
       (+ (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs))))))
@@ -343,7 +343,10 @@
 (load-userinfo)
 
 (defopr sessions req
-  (login-handler req 'login (list (fn (a b) "index.html") "index.html")))
+  (logout-user (get-user req))
+  (aif (good-login (arg req "u") (arg req "p") req!ip)
+       (login it req!ip (user->cookie* it) (list (fn (a b) (arg req "goto")) (arg req "goto")))
+       (failed-login 'login "Bad login." (list (fn (a b) "index.html") "index.html"))))
 
 (mac actions ()
   `(tag (div class "containerthing")
@@ -371,8 +374,8 @@ $(document).ready(function(){
          (actions))))
 
 ; redefine login page for the moment; deal with this in a more ajaxy way in future
-;(def login-page (switch (o msg nil) (o afterward hello-page))
-;  (page "Log in" "style.css" ("jquery-1.3.2.min.js" "standard.js") (tag (div) 
+(def login-page (switch (o msg nil) (o afterward nil))
+  (page "Log in" "style.css" ("jquery-1.3.2.min.js" "standard.js") (tag (div) 
 ;    (let req nil (header)) 
 ;    (pagemessage msg)
 ;    (when (in switch 'login 'both)
@@ -381,7 +384,17 @@ $(document).ready(function(){
 ;      (br2))
 ;    (when (in switch 'register 'both)
 ;      (login-form "Create Account" switch create-handler afterward)))))
-
-
+   (tag (fieldset id "signing_menu" class "more-common-form")
+     (tag (form method "post" id "signin" action "/sessions")
+       (tag (p) (tag (label for "u")(pr "Username"))
+       (tag (input type "text" id "u" name "u" value "" title "u")))       
+       (tag (p) (tag (label for "p")(pr "Password"))
+       (tag (input type "password" id "p" name "p" value "" title "p")))
+       (tag (p class "remember") (tag (input type "submit" id "signin-submit" value "Sign in"))
+       (tag (input type "checkbox" id "remember" name "remember_me" value "1"))
+       (aif (cadr afterward) (tag (input id "goto" name "goto" type "hidden" value it)))
+       (tag (label for "remember") (pr "Remember me")))
+     )
+   ))))
 
 (thread:serve 8080)

@@ -79,7 +79,8 @@
           (w/outfile fo fl
               (let fi (pipe-from:string "git show " revi ":" file)
                 (let str proc.fi
-                  (do (disp str fo)
+                  (do (close fi)
+                      (disp str fo)
                       (disp str)))))))))
 
 (def clear-cache-directories ()
@@ -93,6 +94,7 @@
       (do (whilet li readc.fi (= temp (+ temp li)))
           (= pipe (pipe-from:string  "echo \"" shellesc.temp "\" | markdown -T "))
           (whilet lj readc.pipe (= acc (+ acc lj)))
+          (close pipe)
           acc)))
 
 (defop rules req

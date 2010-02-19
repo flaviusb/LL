@@ -5,6 +5,8 @@
   (unless (dir-exists path)
     (makepath nil ((ac-scheme regexp-split) "/" path))))
 
+(system "git clone git://github.com/flaviusb/vcstatic.git")
+
 (mac page (title cssname jsname . body)
   `(do (gendoctype)
        (tag (html xmlns "http://www.w3.org/1999/xhtml") 
@@ -96,13 +98,13 @@
   (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.min.js" "standard.js")
     (+
       (header)
-      (tag (section class "generated-text") (cacheize "static/rules.text" "rules.html" textize)))))
+      (tag (section class "generated-text") (w/cd "vcstatic" (cacheize "rules.text" "rules.html" textize))))))
 
 (defop about req
   (page "About Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js")
     (+
       (header)
-      (tag (section class "generated-text") (cacheize "static/about.text" "about.html" textize)))))
+      (tag (section class "generated-text") (w/cd "vcstatic" (cacheize "about.text" "about.html" textize))))))
 
 ;(= actionsdone* (table))
 ; per user; [pending, held, done, future], personal, retainer - [by ref], ally - [by fnidish]

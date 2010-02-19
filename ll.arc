@@ -4,8 +4,9 @@
 (def ensure-dir (path)
   (unless (dir-exists path)
     (makepath nil ((ac-scheme regexp-split) "/" path))))
-
-(system "git clone git://github.com/flaviusb/vcstatic.git")
+(if (dir-exists "vcstatic")
+    (system "cd vcstatic && git pull") 
+    (system "git clone git://github.com/flaviusb/vcstatic.git"))
 
 (mac page (title cssname jsname . body)
   `(do (gendoctype)
@@ -70,7 +71,7 @@
 (def cacheize (file name proc (o revi nil))
   (do
     (if (is revi nil) (= revi (cut (readline:pipe-from:string "git log " file) 7)))
-    (let fl (+ "static-cache/" revi ":" name)
+    (let fl (+ "../static-cache/" revi ":" name)
       (if (file-exists fl)
           (w/infile i fl
             (whilet b (readc i)

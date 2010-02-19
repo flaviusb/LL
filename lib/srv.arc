@@ -37,7 +37,7 @@
 ; to handle it. also arrange to kill that thread if it
 ; has not completed in threadlife* seconds.
 
-(= threadlife* 100  requests* 0  requests/ip* (table)  
+(= threadlife* 10  requests* 0  requests/ip* (table)  
    throttle-ips* (table)  ignore-ips* (table)  spurned* (table))
 
 (def handle-request (s breaksrv)

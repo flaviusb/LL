@@ -6,10 +6,10 @@ header, footer, aside, nav, article {
 
 div.header { float: right; } 
 img.logo {
+  margin-top: 15px;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  clear: both;
 }
 .common-form {
   -moz-border-radius-bottomleft:5px;
@@ -28,8 +28,15 @@ img.logo {
   margin-top:-1px;
   font-size: 14px;
 }
-.common-form input {
-  border: 1px transparent;
+.common-form input[type="text"], .common-form input[type="password"] {
+  display: block;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border: 1px solid #ddeef6;
+  font-size: 13px;
+  margin: 0 0 5px;
+  padding: 5px;
+  width: 203px;
 }
 div.columns { display: inline; width: 95% }
 div.column { float: left; width: auto; margin: 3em; }

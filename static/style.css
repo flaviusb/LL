@@ -60,23 +60,31 @@ nav {
 
 nav ul {  
   margin: 0 auto;  
-  width: 940px;  
+  width: 1040px;  
   list-style: none;  
 }
 
 nav ul li {
   float: left;
 }
-
 nav ul li a {
   display: block;
   margin-right: 20px;
-  width: 140px;
+  width: 120px;
   font-size: 14px;
-  line-height: 44px;
+  line-height: 48px;
   text-align: center;
   text-decoration: none;
   color: black;
+}
+
+nav ul li.img a {
+  margin: 0 auto;
+  width: 30px;
+}
+
+nav ul li.img a img {
+  vertical-align: middle;
 }
 
 nav ul li a:hover {

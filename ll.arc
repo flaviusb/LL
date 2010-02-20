@@ -54,7 +54,7 @@
 ;  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ()
-  `(tag (nav) (tag (ul) (navit "about" "About") (navit "rules" "House Rules") (if (and (~is req nil) (get-user req)) (character-header)
+  `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href "index.html") (tag (img src "SkullTiny.png")))) (navit "about" "About") (navit "rules" "House Rules") (if (and (~is req nil) (get-user req)) (character-header)
      (login-header)))))
 (defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (br) (tag (img class "logo" src "NexusLogo.png")))))
 

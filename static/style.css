@@ -12,24 +12,27 @@ img.logo {
   margin-right: auto;
 }
 .common-form {
-  -moz-border-radius-bottomleft:5px;
-  -moz-border-radius-bottomright:5px;
-  -webkit-border-bottom-left-radius:5px;
-  -webkit-border-bottom-right-radius:5px;
-  display:none;
-  background-color:blue;
-  position:absolute;
-  width:210px;
-  z-index:100;
-  border:1px transparent;
-  text-align:left;
-  padding:10px;
-  margin-left:-1px;
-  margin-top:-1px;
+  border-radius-bottomleft: 5px;
+  border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  display: none;
+  background-color: blue;
+  position: absolute;
+  width: 210px;
+  z-index: 100;
+  border: 1px transparent;
+  text-align: left;
+  padding: 10px;
+  margin-left: -1px;
+  margin-top: -1px;
   font-size: 14px;
 }
 .common-form input[type="text"], .common-form input[type="password"] {
   display: block;
+  border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border: 1px solid #ddeef6;

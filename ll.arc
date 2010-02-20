@@ -56,7 +56,7 @@
 (mac header ()
   `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href "index.html") (tag (img src "SkullTiny.png")))) (navit "about" "About") (navit "rules" "House Rules") (if (and (~is req nil) (get-user req)) (character-header)
      (login-header)))))
-(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (br) (tag (img class "logo" src "NexusLogo.png")))))
+(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (img class "logo" src "NexusLogo.png")))))
 
 (defopr index.html req #\/)
 
@@ -105,12 +105,14 @@
 (defop rules req
   (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.min.js" "standard.js")
     (+
+      (tag header (tag h1 (pr "Nexus")))
       (header)
       (tag (section class "generated-text") (w/cd "vcstatic" (cacheize "rules.text" "rules.html" textize))))))
 
 (defop about req
   (page "About Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js")
     (+
+      (tag header (tag h1 (pr "Nexus")))
       (header)
       (tag (section class "generated-text") (w/cd "vcstatic" (cacheize "about.text" "about.html" textize))))))
 
@@ -336,13 +338,13 @@
 (defopl cs req
   (if (admin get-user.req)
     (page "Ascension Auckland: Character sheets" "Style.css" ("jquery-1.3.2.min.js" "standard.js")
-      (each (k v) tablist.hpasswords* (tag span (pr k " ")
+      (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (section class "charsheet") (each (k v) tablist.hpasswords* (tag span (pr k " ")
                (if (charsheets* k)
                  (+ (tag (a href (+ "cs?view=" k))  (pr "View character sheet")))
-                 (+ (tag (a href (+ "cs?create=" k))(pr "Create blank character sheet") )) )) (tag br))  )
+                 (+ (tag (a href (+ "cs?create=" k))(pr "Create blank character sheet") )) )) (tag br)) )))
     (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
       (let cs (charsheets* get-user.req) 
-        (+ (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs)))))))
+        (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs)))))))
 
 
 (clear-cache-directories)

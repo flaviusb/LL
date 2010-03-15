@@ -1,4 +1,19 @@
 (each x '("ac1.arc" "urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc" "fileutils.arc") (load (+ "lib/" x)))
+(each x '("files.arc" "http.arc" "web.arc") (load x))
+
+;(def get-user (req) 
+;  (let u (aand (alref car.req!cooks "user") (cookie->user* (sym it)))
+;    (when u (= (logins* u) car.req!ip))
+;    u))
+
+(mac defpathr (path1 path2 vars . body)
+   `(defpath-raw ,path1 ,vars
+       (do ,@body
+           (redirect ',path2))))
+(mac defpathr2 (path1 path2 vars . body)
+   `(defpath-raw ,path1 ,vars
+       (redirect ',path2)
+        ,@body))
 
 ;redefine ensure-dir here for the moment
 (def ensure-dir (path)
@@ -13,13 +28,25 @@
 (defoptext force-update req
   (do (vcpull) "Done."))
 
+
+; user schema
+; login matches up with login
+; name = real name
+; characters = table of character sheets
+; current-character = index of current character
+(= users* (table))
+(def new-user (lname)
+  (= users*.lname (inst 'user 'login lname)))
+
+
 (mac page (title cssname jsname . body)
   `(do (gendoctype)
        (tag (html xmlns "http://www.w3.org/1999/xhtml") 
          (tag (head) 
            (tag (title) (pr ,title))
            (tag (link rel "stylesheet" type "text/css" href ,cssname) (pr ""))
-           (each x '(,@jsname) (tag (script type "application/javascript" src x))))
+           (each x '(,@jsname) (tag (script type "application/javascript" src x)))
+             (gentag meta http-equiv "content-type" content "application/xhtml+xml; charset=utf-8"))
          (tag (body)
            ,@body))))
 
@@ -49,16 +76,19 @@
 (mac navit (loc text)
   `(tag (li) (tag (a href ,(string loc)) (pr ,(string text)))))
 
+(defpathr /logout / (req)
+  (logout-user get-user.req))
+
 (mac character-header ()
-  `(do (navit "aq" "Action Queue") (navit "cs" "Character Sheet") (tag (li class "right-align") (w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))) nil))
+  `(do (navit "aq" "Action Queue") (navit "cs" "Character Sheet") (tag (li class "right-align") (tag (a href "/logout") (pr "Log out " get-user.req)))))
 ;  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ()
-  `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href "index.html") (tag (img src "SkullTiny.png")))) (navit "about" "About") (navit "rules" "House Rules") (if (and (~is req nil) (get-user req)) (character-header)
+  `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href "index.html") (tag (img src "static/SkullTiny.png")))) (navit "about" "About") (navit "rules" "House Rules") (if (and (~is req nil) (get-user req)) (character-header)
      (login-header)))))
-(defop || req (page "Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (img class "logo" src "NexusLogo.png")))))
+(defpath / (req) (page "Ascension Auckland" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (img class "logo" src "static/NexusLogo.png")))))
 
-(defopr index.html req #\/)
+(defpathr /index.html / (req) nil)
 
 (def eschr (chr)
   (case chr   #\<        "&#60;" 
@@ -102,15 +132,15 @@
           (close pipe)
           acc)))
 
-(defop rules req
-  (page "Ascension Auckland: House Rules" "style.css" ("jquery-1.3.2.min.js" "standard.js")
+(defpath /rules (req)
+  (page "Ascension Auckland: House Rules" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js")
     (+
       (tag header (tag h1 (pr "Nexus")))
       (header)
       (tag (section class "generated-text") (w/cd "vcstatic" (cacheize "rules.text" "rules.html" textize))))))
 
-(defop about req
-  (page "About Ascension Auckland" "style.css" ("jquery-1.3.2.min.js" "standard.js")
+(defpath /about (req)
+  (page "About Ascension Auckland" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js")
     (+
       (tag header (tag h1 (pr "Nexus")))
       (header)
@@ -283,6 +313,11 @@
 (= attributeblock* '((Intelligence Wits Resolve) (Strength Dexterity Stamina) (Presence Manipulation Composure)))
 (= skillblock* '((Mental (Academics Computer Crafts Investigation Medicine Occult Politics Science)) (Physical (Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry)) (Social (Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge))))
 
+; schema for charsheets
+; attributes, skills
+; faction - a symbol, one of pentacle, nephandi, seers, banishers, none, or meta
+; merits are a list of tables (templ merit name dots specialisation submerits)
+
 (= charsheets* (table))
 (= (charsheets* "foo") (obj attributes (table) skills (table)))
 (each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (coerce (* (rand) 5) 'int)))
@@ -321,13 +356,17 @@
       (tag (br))
       (tag (div) ,@body))))
 
+(mac tfip (label value id)
+  `(+ (tag (label for id) (pr label)) (tag (input type "text" value value) (tag (button)))))
+
 (def mage-charsheet (charsheet)
   (with (bod1 (eval (join '(columns) (list:list 'quote (join  
                 (list (join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'locap-string _) '(tag (br))] '(Power Finesse Resistance))))
                 (map1 [join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'tag '(span) (list 'norm-string _) (list 'dots (string "attributes/" _) charsheet!attributes._ 5)) '(tag (br))] _) '(tag (br))] attributeblock*)))))
         bod2 (eval (join '(columns) (list:list 'quote 
                 (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string "skills/" _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)))))
-  (tag (div)
+  (tag (section class "character-sheet")
+    (tag (div class "column")(tag (span) (pr "Player name: ") ))
     (gold-box :body (columns ))
     (gold-box :title (centered:locap-string Attributes)
       :body (eval bod1))
@@ -350,7 +389,7 @@
 (clear-cache-directories)
 (load-userinfo)
 
-(defopr sessions req
+(defpathr2 /sessions /index.html (req)
   (logout-user (get-user req))
   (aif (good-login (arg req "u") (arg req "p") req!ip)
        (login it req!ip (user->cookie* it) (list (fn (a b) (aif (arg req "goto") it "index.html")) (aif (arg req "goto") it "index.html")))
@@ -404,5 +443,6 @@ $(document).ready(function(){
        (tag (label for "remember") (pr "Remember me")))
      )
    ))))
-
-(thread:serve 8080)
+(load-userinfo)
+(= httpd-handler dispatch)
+(start-httpd 8020)

@@ -25,8 +25,9 @@
     (system "cd vcstatic && git pull") 
     (system "git clone git://github.com/flaviusb/vcstatic.git")))
 (vcpull)
-(defoptext force-update req
-  (do (vcpull) "Done."))
+(defpath /force-update (req)
+  (+ (gendoctype)
+     (tag html (tag body (vcpull)))))
 
 
 ; user schema
@@ -58,11 +59,11 @@
 ;request
 ;response
 
-(mac login-header ()
+(mac login-header ((o prefix ""))
   `(tag (li class "login")
    (if (tag (a href "#" onclick "ShowLogin()") (pr "Log in"))
    (tag (fieldset id "signing_menu" class "common-form")
-     (tag (form method "post" id "signin" action "/sessions")
+     (tag (form method "post" id "signin" action ,(+ prefix "/sessions"))
        (tag (p) (tag (label for "u")(pr "Username"))
        (tag (input type "text" id "u" name "u" value "" title "u")))       
        (tag (p) (tag (label for "p")(pr "Password"))
@@ -79,13 +80,13 @@
 (defpathr /logout / (req)
   (logout-user get-user.req))
 
-(mac character-header ()
-  `(do (navit "aq" "Action Queue") (navit "cs" "Character Sheet") (tag (li class "right-align") (tag (a href "/logout") (pr "Log out " get-user.req)))))
+(mac character-header ((o prefix ""))
+  `(do (navit ,(+ prefix "aq") "Action Queue") (navit ,(+ prefix "cs") "Character Sheet") (tag (li class "right-align") (tag (a href ,(+ prefix "/logout")) (pr "Log out " get-user.req)))))
 ;  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
-(mac header ()
-  `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href "index.html") (tag (img src "static/SkullTiny.png")))) (navit "about" "About") (navit "rules" "House Rules") (if (and (~is req nil) (get-user req)) (character-header)
-     (login-header)))))
+(mac header ((o prefix ""))
+  `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href ,(+ prefix "index.html")) (tag (img src ,(+ prefix "static/SkullTiny.png"))))) (navit ,(+ prefix "vc/about") "About") (navit ,(+ prefix "vc/rules") "House Rules") (if (and (~is req nil) (get-user req)) (character-header ,prefix)
+     (login-header ,prefix)))))
 (defpath / (req) (page "Ascension Auckland" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (img class "logo" src "static/NexusLogo.png")))))
 
 (defpathr /index.html / (req) nil)
@@ -132,19 +133,14 @@
           (close pipe)
           acc)))
 
-(defpath /rules (req)
-  (page "Ascension Auckland: House Rules" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js")
-    (+
-      (tag header (tag h1 (pr "Nexus")))
-      (header)
-      (tag (section class "generated-text") (w/cd "vcstatic" (cacheize "rules.text" "rules.html" textize))))))
-
-(defpath /about (req)
-  (page "About Ascension Auckland" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js")
-    (+
-      (tag header (tag h1 (pr "Nexus")))
-      (header)
-      (tag (section class "generated-text") (w/cd "vcstatic" (cacheize "about.text" "about.html" textize))))))
+(defpath /vc/: (req doc)
+  (if (file-exists (string "vcstatic/" doc ".text"))
+    (page "Ascension Auckland: House Rules" "../static/style.css" ("../static/jquery-1.3.2.min.js" "../static/standard.js")
+      (+
+        (tag header (tag h1 (pr "Nexus")))
+        (header "../")
+        (tag (section class "generated-text") (w/cd "vcstatic" (cacheize (+ doc ".text") (+ doc ".html") textize)))))
+    (page "Document Not Found" "../static/style.css" ("../static/jquery-1.3.2.min.js" "../static/standard.js") (+ "Document " doc " not found."))))
 
 ;(= actionsdone* (table))
 ; per user; [pending, held, done, future], personal, retainer - [by ref], ally - [by fnidish]

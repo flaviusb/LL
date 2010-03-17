@@ -10,10 +10,6 @@
    `(defpath-raw ,path1 ,vars
        (do ,@body
            (redirect ',path2))))
-(mac defpathr2 (path1 path2 vars . body)
-   `(defpath-raw ,path1 ,vars
-       (redirect ',path2)
-        ,@body))
 
 ;redefine ensure-dir here for the moment
 (def ensure-dir (path)
@@ -63,7 +59,7 @@
   `(tag (li class "login")
    (if (tag (a href "#" onclick "ShowLogin()") (pr "Log in"))
    (tag (fieldset id "signing_menu" class "common-form")
-     (tag (form method "post" id "signin" action ,(+ prefix "/sessions"))
+     (tag (form method "post" id "signin" action ,(+ prefix "sessions"))
        (tag (p) (tag (label for "u")(pr "Username"))
        (tag (input type "text" id "u" name "u" value "" title "u")))       
        (tag (p) (tag (label for "p")(pr "Password"))
@@ -81,7 +77,7 @@
   (logout-user get-user.req))
 
 (mac character-header ((o prefix ""))
-  `(do (navit ,(+ prefix "aq") "Action Queue") (navit ,(+ prefix "cs") "Character Sheet") (tag (li class "right-align") (tag (a href ,(+ prefix "/logout")) (pr "Log out " get-user.req)))))
+  `(do (navit ,(+ prefix "aq") "Action Queue") (navit ,(+ prefix "cs") "Character Sheet") (tag (li class "right-align") (tag (a href ,(+ prefix "logout")) (pr "Log out " get-user.req)))))
 ;  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ((o prefix ""))
@@ -385,11 +381,12 @@
 (clear-cache-directories)
 (load-userinfo)
 
-(defpathr2 /sessions /index.html (req)
+(defpath-raw /sessions (req)
   (logout-user (get-user req))
   (aif (good-login (arg req "u") (arg req "p") req!ip)
-       (login it req!ip (user->cookie* it) (list (fn (a b) (aif (arg req "goto") it "index.html")) (aif (arg req "goto") it "index.html")))
-       (failed-login 'login "Bad login." (list (fn (a b) "index.html") "index.html"))))
+       (do (= (logins* it) req!ip)
+           (redirect "/index.html" http-found+ (copy httpd-hds* 'Set-Cookie (+ "user=" (user->cookie* it) "; expires=Sun, 17-Jan-2038 19:14:07 GMT"))))
+       (redirect "/index.html")))
 
 (mac actions ()
   `(tag (div class "containerthing")

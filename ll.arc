@@ -16,7 +16,7 @@
      (resphead http-ok+ (copy httpd-hds* "Content-Type" "text/plain"))
      ,@body))
 
-(mac defpathtext (path vars . body)
+(mac defpathjson (path vars . body)
   `(defpath-raw ,path ,vars
      (resphead http-ok+ (copy httpd-hds* "Content-Type" "text/json"))
      ,@body))

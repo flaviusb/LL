@@ -22,9 +22,10 @@
      ,@body))
 
 (mac defpathl (path vars . body)
-  `(if (get-user:car ,vars)
-    (do ,@body)
-    (login-page 'login "You must log in to view this page." (list "" path))))
+  `(defpath ,path ,vars
+     (if (get-user ,@vars)
+       (do ,@body)
+       (login-page 'login "You must log in to view this page." (list "" ',path)))))
 
 ;redefine ensure-dir here for the moment
 (def ensure-dir (path)
@@ -250,7 +251,7 @@
 (defpathjson /showactions (req)
   (tojson (obj futureactions (aif (actionqueues* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing))))
 
-(defpathjson submitactions (req)
+(defpathjson /submitactions (req)
   (do
     (parse-actions get-user.req (arg req "aq"))
     (tojson (obj message 'success futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing)))))
@@ -379,16 +380,16 @@
       :body (eval bod1))
     (gold-box @title ((locap-string Skills)  (right-align:locap-string Other\ Traits))
       :body (eval bod2)))))
-(defopjson csjson req
+(defopjson /csjson (req)
   (tojson (charsheets* get-user.req)))
 (defpathl /cs (req)
   (if (admin get-user.req)
-    (page "Ascension Auckland: Character sheets" "Style.css" ("jquery-1.3.2.min.js" "standard.js")
+    (page "Ascension Auckland: Character sheets" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js")
       (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (section class "charsheet") (each (k v) tablist.hpasswords* (tag span (pr k " ")
                (if (charsheets* k)
                  (+ (tag (a href (+ "cs?view=" k))  (pr "View character sheet")))
                  (+ (tag (a href (+ "cs?create=" k))(pr "Create blank character sheet") )) )) (tag br)) )))
-    (page "Ascension Auckland: Character sheet" "style.css" ("jquery-1.3.2.min.js" "standard.js") 
+    (page "Ascension Auckland: Character sheet" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js") 
       (let cs (charsheets* get-user.req) 
         (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs)))))))
 
@@ -415,7 +416,7 @@
   ())
 
 (defop aq req
-  (page "Ascension Auckland: Action Queue" "style.css" ("jquery-1.3.2.min.js" "jquery-ui-1.7.2.custom.min.js" "standard.js")
+  (page "Ascension Auckland: Action Queue" "static/style.css" ("static/jquery-1.3.2.min.js" "static/jquery-ui-1.7.2.custom.min.js" "staic/standard.js")
     (tag (div)
          (tag (script type "application/javascript") (pr "
 <![CDATA[
@@ -430,7 +431,7 @@ $(document).ready(function(){
 
 ; redefine login page for the moment; deal with this in a more ajaxy way in future
 (def login-page (switch (o msg nil) (o afterward nil))
-  (page "Log in" "style.css" ("jquery-1.3.2.min.js" "standard.js") (tag (div) 
+  (page "Log in" "static/style.css" ("static/jquery-1.3.2.min.js" "static/standard.js") (tag (div) 
 ;    (let req nil (header)) 
 ;    (pagemessage msg)
 ;    (when (in switch 'login 'both)

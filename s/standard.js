@@ -79,9 +79,9 @@ function click_dot(name, value)
     //alert(name + "/" + i);
     if (i <= value)
     {
-      document.getElementById(name + '/' + i).src = 'orange-dot.png';
+      document.getElementById(name + '/' + i).src = 's/o.png';
     } else {
-      document.getElementById(name + '/' + i).src = 'white-dot.png';
+      document.getElementById(name + '/' + i).src = 's/w.png';
     }
   }
 }

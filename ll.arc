@@ -21,6 +21,11 @@
      (resphead http-ok+ (copy httpd-hds* "Content-Type" "text/json"))
      ,@body))
 
+(mac defpathl (path vars . body)
+  `(if (get-user:car ,vars)
+    (do ,@body)
+    (login-page 'login "You must log in to view this page." (list "" path))))
+
 ;redefine ensure-dir here for the moment
 (def ensure-dir (path)
   (unless (dir-exists path)
@@ -376,7 +381,7 @@
       :body (eval bod2)))))
 (defopjson csjson req
   (tojson (charsheets* get-user.req)))
-(defopl cs req
+(defpathl /cs (req)
   (if (admin get-user.req)
     (page "Ascension Auckland: Character sheets" "Style.css" ("jquery-1.3.2.min.js" "standard.js")
       (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (section class "charsheet") (each (k v) tablist.hpasswords* (tag span (pr k " ")
@@ -395,7 +400,7 @@
   (logout-user (get-user req))
   (aif (good-login (arg req "u") (arg req "p") req!ip)
        (do (= (logins* it) req!ip)
-           (redirect "/index.html" http-found+ (copy httpd-hds* 'Set-Cookie (+ "user=" (user->cookie* it) "; expires=Sun, 17-Jan-2038 19:14:07 GMT"))))
+           (redirect (aif (arg req "goto") it "/index.html") http-found+ (copy httpd-hds* 'Set-Cookie (+ "user=" (user->cookie* it) "; expires=Sun, 17-Jan-2038 19:14:07 GMT"))))
        (redirect "/index.html")))
 
 (mac actions ()
@@ -434,6 +439,7 @@ $(document).ready(function(){
 ;      (br2))
 ;    (when (in switch 'register 'both)
 ;      (login-form "Create Account" switch create-handler afterward)))))
+   (pagemessage msg)
    (tag (fieldset id "signing_menu" class "more-common-form")
      (tag (form method "post" id "signin" action "/sessions")
        (tag (p) (tag (label for "u")(pr "Username"))

@@ -11,6 +11,16 @@
        (do ,@body
            (redirect ',path2))))
 
+(mac defpathtext (path vars . body)
+  `(defpath-raw ,path ,vars
+     (resphead http-ok+ (copy httpd-hds* "Content-Type" "text/plain"))
+     ,@body))
+
+(mac defpathtext (path vars . body)
+  `(defpath-raw ,path ,vars
+     (resphead http-ok+ (copy httpd-hds* "Content-Type" "text/json"))
+     ,@body))
+
 ;redefine ensure-dir here for the moment
 (def ensure-dir (path)
   (unless (dir-exists path)
@@ -225,17 +235,17 @@
       (+tag actionqueues*.usr loc (list "type" ty "data" da))
   ))
 
-(defoptext addaction req
+(defpathtext /addaction (req)
   (if (~is get-user.req nil)
     (do
       (addaction (get-user req) (arg req "ty") (arg req "da") (arg req "loc"))
       (prn "Success."))
      (prn "No success.")))
 
-(defopjson showactions req
+(defpathjson /showactions (req)
   (tojson (obj futureactions (aif (actionqueues* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing))))
 
-(defopjson submitactions req
+(defpathjson submitactions (req)
   (do
     (parse-actions get-user.req (arg req "aq"))
     (tojson (obj message 'success futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing)))))

@@ -340,12 +340,12 @@
 
 (= charsheets* (table))
 (= (charsheets* "foo") (inst 'charsheet 'gnosis 2))
-(each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (coerce (* (rand) 5) 'int)))
+(each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (+ (coerce (* (rand) 4) 'int) 1)))
 (each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
 (each x arcana* (= (((charsheets* "foo") 'arcana) x) (coerce (* (rand) 5) 'int)))
 
 (def locap-string (body)
-  (tag (span class "locap") (pr body)))
+ (tag (span class "locap") (pr body)))
 
 (mac norm-string body
   `(tag (span class "norm") (pr (string ',body))))
@@ -432,7 +432,7 @@
   ())
 
 (defpath aq req
-  (page "Ascension Auckland: Action Queue" "s/style.css" ("s/jquery-1.3.2.min.js" "s/jquery-ui-1.7.2.custom.min.js" "staic/standard.js")
+  (page "Ascension Auckland: Action Queue" "s/style.css" ("s/jquery-1.3.2.min.js" "s/jquery-ui-1.7.2.custom.min.js" "s/standard.js")
     (tag (div)
          (tag (script type "application/javascript") (pr "
 <![CDATA[
@@ -448,14 +448,6 @@ $(document).ready(function(){
 ; redefine login page for the moment; deal with this in a more ajaxy way in future
 (def login-page (switch (o msg nil) (o afterward nil))
   (page "Log in" "s/style.css" ("s/jquery-1.3.2.min.js" "s/standard.js") (tag (div) 
-;    (let req nil (header)) 
-;    (pagemessage msg)
-;    (when (in switch 'login 'both)
-;      (login-form "Login" switch login-handler afterward)
-;      (hook 'login-form afterward)
-;      (br2))
-;    (when (in switch 'register 'both)
-;      (login-form "Create Account" switch create-handler afterward)))))
    (pagemessage msg)
    (tag (fieldset id "signing_menu" class "more-common-form")
      (tag (form method "post" id "signin" action "/sessions")

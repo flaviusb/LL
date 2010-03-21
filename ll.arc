@@ -320,6 +320,7 @@
 
 (= attributeblock* '((Intelligence Wits Resolve) (Strength Dexterity Stamina) (Presence Manipulation Composure)))
 (= skillblock* '((Mental (Academics Computer Crafts Investigation Medicine Occult Politics Science)) (Physical (Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry)) (Social (Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge))))
+(= skillobj* (obj Mental '(Academics Computer Crafts Investigation Medicine Occult Politics Science) Physical '(Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry) Social '(Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge)))
 
 ; schema for charsheets
 ; attributes, skills
@@ -331,14 +332,14 @@
 (each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (coerce (* (rand) 5) 'int)))
 (each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
 
-(mac locap-string body
-  `(tag (span class "locap") (pr (string ',body))))
+(def locap-string (body)
+  (tag (span class "locap") (pr body)))
 
 (mac norm-string body
   `(tag (span class "norm") (pr (string ',body))))
 
 (def dots (name value out-of)
-  (tag (span) (for x 1 value (tag (a href (string "javascript:click_dot('" name "', " value ");")) (tag (img src "s/b.png")))) (for x (+ value 1) out-of (tag (a href (string "javascript:click_dot('" name "', " x ");")) (tag (img id (string name "/" x) src "s/w.png"))))))
+  (tag (span class "right-align") (for x 1 value (tag (a href (string "javascript:click_dot('" name "', " value ");")) (tag (img src "s/b.png")))) (for x (+ value 1) out-of (tag (a href (string "javascript:click_dot('" name "', " x ");")) (tag (img id (string name "/" x) src "s/w.png"))))))
 
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )
@@ -368,18 +369,15 @@
   `(+ (tag (label for id) (pr label)) (tag (input type "text" value value) (tag (button)))))
 
 (def mage-charsheet (charsheet)
-  (with (bod1 (eval (join '(columns) (list:list 'quote (join  
-                (list (join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'locap-string _) '(tag (br))] '(Power Finesse Resistance))))
-                (map1 [join (list 'tag '(div)) (map1 [list 'tag '(div) (list 'tag '(span) (list 'norm-string _) (list 'dots (string "attributes/" _) charsheet!attributes._ 5)) '(tag (br))] _) '(tag (br))] attributeblock*)))))
-        bod2 (eval (join '(columns) (list:list 'quote 
-                (mappend [join (list (list 'centered:locap-string (car _))) (map1 [list 'tag '(span) (list 'norm-string _) (list 'dots (string "skills/" _) charsheet!skills._ 5)] (car (cdr _)))] skillblock*)))))
   (tag (section class "character-sheet")
     (tag (div class "column")(tag (span) (pr "Player name: ") ))
     (gold-box :body (columns ))
-    (gold-box :title (centered:locap-string Attributes)
-      :body (eval bod1))
-    (gold-box @title ((locap-string Skills)  (right-align:locap-string Other\ Traits))
-      :body (eval bod2)))))
+    (gold-box :title (centered:locap-string "Attributes")
+      :body (tag (div class "columns") (each x attributeblock* (tag (div class "column")
+              (each y x (+ (tag (span class "wri") (pr y)) (dots (string "attributes/" y) charsheet!attributes.y 5) (tag (div class "sep"))))))))
+    (gold-box :title (locap-string "Skills")
+      :body (tag (div class "columns") (each x '(Mental Social Physical) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) charsheet!skills.y 5) (tag (div class "sep")))))))) )))
+
 (defpathjson /csjson (req)
   (tojson (charsheets* get-user.req)))
 (defpathl /cs (req)

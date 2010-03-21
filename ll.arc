@@ -350,8 +350,8 @@
 (mac norm-string body
   `(tag (span class "norm") (pr (string ',body))))
 
-(def dots (name value out-of)
-  (tag (span class "right-align") (for x 1 value (tag (a href (string "javascript:click_dot('" name "', " value ");")) (tag (img src "s/b.png")))) (for x (+ value 1) out-of (tag (a href (string "javascript:click_dot('" name "', " x ");")) (tag (img id (string name "/" x) src "s/w.png"))))))
+(def dots (name value out-of (o editable t))
+  (tag (span class "right-align") (for x 1 value (eval (join (if editable `(tag (a href (string "javascript:click_dot('" ',name "', " ',value ");"))) '(eval)) '((tag (img src "s/b.png")))))) (for x (+ value 1) out-of (eval (join  (if editable `(tag (a href (string "javascript:click_dot('" ',name "', " ',x ");"))) '(eval)) `((tag (img id (string ,name "/" ,x) src "s/w.png")))) ))))
 
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )
@@ -387,8 +387,14 @@
     (gold-box :title (centered:locap-string "Attributes")
       :body (tag (div class "columns") (each x attributeblock* (tag (div class "column")
               (each y x (+ (tag (span class "wri") (pr y)) (dots (string "attributes/" y) charsheet!attributes.y 5) (tag (div class "sep"))))))))
-    (gold-box :title (locap-string "Skills")
-      :body (tag (div class "columns") (each x '(Mental Social Physical) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) charsheet!skills.y 5) (tag (div class "sep")))))))) )))
+    (gold-box :title (centered:locap-string "Skills")
+      :body (tag (div class "columns") (each x '(Mental Social Physical) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) charsheet!skills.y 5) (tag (div class "sep")))))))))
+    (gold-box @title ((locap-string "Merits") (right-align:locap-string "Arcana"))
+      @body 
+      ((tag (div))
+       (tag (div class "right-align") (each x arcana* (+ (tag (span class "wri") (pr x)) (dots (string "arcana/" x) charsheet!arcana.x 5) (tag (div class "sep"))))
+         (centered:norm-string "Gnosis") (tag (br)) (dots "gnosis" charsheet!gnosis 10)
+         (centered:norm-string "Willpower") (tag (br)) (dots "willpower" (+ charsheet!attributes!Composure charsheet!attributes!Resolve) 10 nil) )))))
 
 (defpathjson /csjson (req)
   (tojson (charsheets* get-user.req)))

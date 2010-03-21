@@ -3,7 +3,7 @@ var loginshowing = false;
 
 function initialise_charsheet()
 {
-  $.getJSON('http://localhost:8080/csjson',
+  $.getJSON('http://nexus.gen.nz:8080/csjson',
     function(data){
       charsheet = JSON.parse(JSON.stringify(data));
       charsheetadjusted = JSON.parse(JSON.stringify(data));
@@ -133,7 +133,7 @@ function actionise()
 function get_action_queue_from_server()
 {
   $(".messagepane").html("");
-  $.getJSON('http://localhost:8080/showactions',
+  $.getJSON('http://nexus.gen.nz:8080/showactions',
     function(data){
       $.each(data['pastactions'], function(i,item){
         if (item.type)
@@ -148,7 +148,7 @@ function get_action_queue_from_server()
 
 function post_action_queue_to_server(aq)
 {
-  $.getJSON('http://localhost:8080/submitactions', aq,
+  $.getJSON('http://nexus.gen.nz:8080/submitactions', aq,
     function(data){
       $('.messagepane').html(data['message']);
       $.each(data['pastactions'], function(i,item){

@@ -380,7 +380,7 @@
       :body (eval bod1))
     (gold-box @title ((locap-string Skills)  (right-align:locap-string Other\ Traits))
       :body (eval bod2)))))
-(defopjson /csjson (req)
+(defpathjson /csjson (req)
   (tojson (charsheets* get-user.req)))
 (defpathl /cs (req)
   (if (admin get-user.req)
@@ -415,7 +415,7 @@
 (defop longpoll req
   ())
 
-(defop aq req
+(defpath aq req
   (page "Ascension Auckland: Action Queue" "s/style.css" ("s/jquery-1.3.2.min.js" "s/jquery-ui-1.7.2.custom.min.js" "staic/standard.js")
     (tag (div)
          (tag (script type "application/javascript") (pr "

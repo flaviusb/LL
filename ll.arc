@@ -321,16 +321,28 @@
 (= attributeblock* '((Intelligence Wits Resolve) (Strength Dexterity Stamina) (Presence Manipulation Composure)))
 (= skillblock* '((Mental (Academics Computer Crafts Investigation Medicine Occult Politics Science)) (Physical (Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry)) (Social (Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge))))
 (= skillobj* (obj Mental '(Academics Computer Crafts Investigation Medicine Occult Politics Science) Physical '(Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry) Social '(Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge)))
+(= arcana* '(Death Fate Forces Life Mind Matter Prime Space Spirit Time))
 
 ; schema for charsheets
 ; attributes, skills
 ; faction - a symbol, one of pentacle, nephandi, seers, banishers, none, or meta
-; merits are a list of tables (templ merit name dots specialisation submerits)
+; merits are a list of tables (templ merit name dots specialisations submerits)
+
+(deftem charsheet 
+  attributes (obj Intelligence 1 Wits 1 Resolve 1 Strength 1 Dexterity 1 Stamina 1 Presence 1 Manipulation 1 Composure 1)
+  skills (obj Academics 0 Computer 0 Crafts 0 Investigation 0 Medicine 0 Occult 0 Politics 0 Science 0 
+              Athletics 0 Brawl 0 Drive 0 Firearms 0 Larceny 0 Stealth 0 Survival 0 Weaponry 0
+              Animal#\ Ken 0 Empathy 0 Expression 0 Intimidation 0 Persuasion 0 Socialize 0 Streetwise 0 Subterfuge 0)
+  gnosis 1
+  arcana (obj Death 0 Fate 0 Forces 0 Life 0 Mind 0 Matter 0 Prime 0 Space 0 Spirit 0 Time 0)
+  merits (table)
+  faction 'pentacle)
 
 (= charsheets* (table))
-(= (charsheets* "foo") (obj attributes (table) skills (table)))
+(= (charsheets* "foo") (inst 'charsheet 'gnosis 2))
 (each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (coerce (* (rand) 5) 'int)))
 (each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
+(each x arcana* (= (((charsheets* "foo") 'arcana) x) (coerce (* (rand) 5) 'int)))
 
 (def locap-string (body)
   (tag (span class "locap") (pr body)))

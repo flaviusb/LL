@@ -41,6 +41,9 @@
   (+ (gendoctype)
      (tag html (tag body (vcpull)))))
 
+(defpath /showheaders (req)
+  (+ (gendoctype)
+     (tag html (tag body (disp req)))))
 
 ; user schema
 ; login matches up with login

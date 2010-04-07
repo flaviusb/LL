@@ -79,9 +79,15 @@ function click_dot(name, value)
     //alert(name + "/" + i);
     if (i <= value)
     {
-      document.getElementById(name + '/' + i).src = 's/o.png';
+      if (createAction(name, i))
+      {
+        document.getElementById(name + '/' + i).src = 's/o.png';
+      }
     } else {
-      document.getElementById(name + '/' + i).src = 's/w.png';
+      if (removeAction(name, i))
+      {
+        document.getElementById(name + '/' + i).src = 's/w.png';
+      }
     }
   }
 }
@@ -111,7 +117,20 @@ function openlongpoll()
 {
 
 }
-
+function newAction(name, num)
+{
+  return {ty: "XP Spend", da: name + "/" + num};
+}
+function createAction(name, num)
+{
+  $.getJSON('/addaction', newAction(name, num));
+  return true;
+}
+function removeAction(name, num)
+{
+  $.getJSON('/removeaction', newAction(name, num));
+  return true;
+}
 function actionise()
 {
   $(".liveactions").sortable({

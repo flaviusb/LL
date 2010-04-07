@@ -45,15 +45,6 @@
   (+ (gendoctype)
      (tag html (tag body (disp req)))))
 
-; user schema
-; login matches up with login
-; name = real name
-; characters = table of character sheets
-; current-character = index of current character
-(= users* (table))
-(def new-user (lname)
-  (= users*.lname (inst 'user 'login lname)))
-
 
 (mac page (title cssname jsname . body)
   `(do (gendoctype)
@@ -236,7 +227,23 @@
                 (zap insert acc x))))
         acc))))
 
+; user schema
+; login matches up with login
+; name = real name
+; characters = table of character sheets
+; current-character = index of current character
+(= users* (table))
+(def new-user (lname)
+  (do
+    (= users*.lname (inst 'user 'login lname))
+    (if (is nil actionqueues*.lname) (= actionqueues*.lname (multitable)))))
 (= actionqueues* (table))
+
+; Hack for the moment
+(new-user "foo")
+
+
+
 ; each action queue is a multitable of type/data pairs, with type, date, and location tags
 (def addaction (usr ty da loc)
   (do
@@ -244,12 +251,25 @@
       (+tag actionqueues*.usr loc (list "type" ty "data" da))
   ))
 
-(defpathtext /addaction (req)
+(defpathjson /addaction (req)
   (if (~is get-user.req nil)
     (do
       (addaction (get-user req) (arg req "ty") (arg req "da") (arg req "loc"))
-      (prn "Success."))
-     (prn "No success.")))
+      (prn "{res: true}"))
+     (prn "{res: false}")))
+(def removeaction (usr ty da loc)
+  (do
+      (-tag actionqueues*.usr ty  (list "type" ty "data" da))
+      (-tag actionqueues*.usr loc (list "type" ty "data" da))
+  ))
+
+(defpathjson /removeaction (req)
+  (if (~is get-user.req nil)
+    (do
+      (removeaction (get-user req) (arg req "ty") (arg req "da") (arg req "loc"))
+      (prn "{res: true}"))
+     (prn "{res: false}")))
+
 
 (defpathjson /showactions (req)
   (tojson (obj futureactions (aif (actionqueues* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing))))

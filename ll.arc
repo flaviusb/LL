@@ -378,7 +378,7 @@
   name "" virtue "" vice "" cabal "" legacy "" order "" path "")
 
 (= charsheets* (table) charsheetsorange* (table))
-(= (charsheets* "foo") (inst 'charsheet 'gnosis 2 'player "Jonny Random" 'name "Foo McDarkShado" 'virtue 'Fortitude 'vice 'Wrath 'order "The Adamantine Arrow" 'path "Obrimos"))
+(= (charsheets* "foo") (inst 'charsheet 'gnosis 2 'player "Jonny Random" 'name "Foo McDarkShado" 'virtue 'Fortitude 'vice 'Wrath 'order "The Adamantine Arrow" 'path "Obrimos" 'merits (obj "Occultation" 3)))
 (each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (+ (coerce (* (rand) 4) 'int) 1)))
 (each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
 (each x arcana* (= (((charsheets* "foo") 'arcana) x) (coerce (* (rand) 5) 'int)))
@@ -438,7 +438,7 @@
       :body (tag (div class "columns") (each x '(Mental Physical Social) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) charsheet!skills.y 5) (tag (div class "sep")))))))))
     (gold-box @title ((locap-string "Merits") (right-align:locap-string "Arcana"))
       @body 
-      ((tag (div))
+      ((tag (div class "column") (each (merit numd) charsheet!merits (tag (span) (tag (span class "wri") (pr merit)) (dots (string "merits/" merit) numd 5))))
        (tag (div class "right-align") (each x arcana* (+ (tag (span class "wri") (pr x)) (dots (string "arcana/" x) charsheet!arcana.x 5) (tag (div class "sep"))))
          (centered:norm-string "Gnosis") (tag (br)) (dots "gnosis" charsheet!gnosis 10)
          (centered:norm-string "Willpower") (tag (br)) (dots "willpower" (+ charsheet!attributes!Composure charsheet!attributes!Resolve) 10 nil) )))))

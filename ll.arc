@@ -374,7 +374,7 @@
   gnosis 1
   arcana (obj Death 0 Fate 0 Forces 0 Life 0 Mind 0 Matter 0 Prime 0 Space 0 Spirit 0 Time 0)
   merits (table)
-  faction 'pentacle
+  faction 'pentacle wisdom 7
   name "" virtue "" vice "" cabal "" legacy "" order "" path "")
 
 (= charsheets* (table) charsheetsorange* (table))
@@ -441,7 +441,9 @@
       ((tag (div class "column") (each (merit numd) charsheet!merits (tag (span) (tag (span class "wri") (pr merit)) (dots (string "merits/" merit) numd 5))))
        (tag (div class "right-align") (each x arcana* (+ (tag (span class "wri") (pr x)) (dots (string "arcana/" x) charsheet!arcana.x 5) (tag (div class "sep"))))
          (centered:norm-string "Gnosis") (tag (br)) (dots "gnosis" charsheet!gnosis 10)
-         (centered:norm-string "Willpower") (tag (br)) (dots "willpower" (+ charsheet!attributes!Composure charsheet!attributes!Resolve) 10 nil) )))))
+         (centered:norm-string "Willpower") (tag (br)) (dots "willpower" (+ charsheet!attributes!Composure charsheet!attributes!Resolve) 10 nil)
+         (centered:norm-string "Wisdom") (tag (br)) (dots "wisdom" charsheet!wisdom 10 nil)
+ )))))
 
 (defpathjson /csjson (req)
   (tojson (obj charsheet (charsheets* get-user.req) orange (charsheetsorange* get-user.req))))

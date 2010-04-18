@@ -378,7 +378,7 @@
   name "" virtue "" vice "" cabal "" legacy "" order "" path "")
 
 (= charsheets* (table) charsheetsorange* (table))
-(= (charsheets* "foo") (inst 'charsheet 'gnosis 2 'name "Foo" 'virtue 'Fortitude 'vice 'Wrath 'order "The Adamantine Arrow" 'path "Obrimos"))
+(= (charsheets* "foo") (inst 'charsheet 'gnosis 2 'player "Jonny Random" 'name "Foo McDarkShado" 'virtue 'Fortitude 'vice 'Wrath 'order "The Adamantine Arrow" 'path "Obrimos"))
 (each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (+ (coerce (* (rand) 4) 'int) 1)))
 (each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
 (each x arcana* (= (((charsheets* "foo") 'arcana) x) (coerce (* (rand) 5) 'int)))
@@ -427,7 +427,7 @@
 (def mage-charsheet (charsheet)
   (tag (section class "character-sheet")
     (tag (div class "columns") 
-      (tag (div class "column") (tag (span) (pr "Player name: " ) ) (br) (tag (span) (prlr "Character name: " charsheet!name)) (br) (tag (span) (prlr "Cabal: " charsheet!cabal)))
+      (tag (div class "column") (tag (span) (prlr "Player name: " charsheet!player)) (br) (tag (span) (prlr "Character name: " charsheet!name)) (br) (tag (span) (prlr "Cabal: " charsheet!cabal)))
       (tag (div class "column") (tag (span) (prlr "Virtue: " charsheet!virtue)) (br) (tag (span) (prlr "Vice: " charsheet!vice)))
       (tag (div class "column") (tag (span) (prlr "Order: " charsheet!order)) (br) (tag (span) (prlr "Path: " charsheet!path)) (br) (tag (span) (prlr "Legacy: " charsheet!legacy))))
     (gold-box :body (columns ))

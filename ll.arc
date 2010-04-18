@@ -242,19 +242,34 @@
 ; Hack for the moment
 (new-user "foo")
 
+(mac setwpath (ob path (o ma 0))
+  (with (it ob spl ((ac-scheme regexp-split) "/" (string path)))
+    ;(zap map spl [string _])
+    (zap coerce (car (nthcdr (- (len spl) 1) spl)) 'int)
+    (each x spl (= it (list it (if (is (type x) 'int) (max ma x) (list 'quote (coerce x 'sym))))))
+    `(= ,@it)))
 
+(mac getwpath (ob path)
+  (with (it ob spl (rev:cdr:rev ((ac-scheme regexp-split) "/" (string path))))
+    (each x spl (= it (list it (list 'quote (coerce (string x) 'sym)))))
+    it))
 
 ; each action queue is a multitable of type/data pairs, with type, date, and location tags
-(def addaction (usr ty da loc)
-  (do
-      (+tag actionqueues*.usr ty  (list "type" ty "data" da))
-      (+tag actionqueues*.usr loc (list "type" ty "data" da))
+(mac addactionf (usr ty da loc)
+  ``(addaction ,,usr ,,ty ,,da ,,loc))
+(mac addaction (usr ty da loc)
+  ``(do
+      (+tag (actionqueues* ,,usr) ,,ty  (list "type" ,,ty "data" ,,da))
+      (+tag (actionqueues* ,,usr) ,,loc (list "type" ,,ty "data" ,,da))
+      (if (is ,,ty "XP Spend")
+        (setwpath (charsheetsorange* ,,usr) ,,da ,(getwpath (charsheetsorange* ,usr) ,da)))
   ))
+;        ``(setwpath (charsheetsorange* "foo") "attributes/Strength/3" ,(getwpath (charsheetsorange* "foo") "attributes/Strength/3"))
 
 (defpathjson /addaction (req)
   (if (~is get-user.req nil)
     (do
-      (addaction (get-user req) (arg req "ty") (arg req "da") (arg req "loc"))
+      (eval (addactionf (get-user req) (arg req "ty") (arg req "da") (arg req "loc")))
       (prn "{res: true}"))
      (prn "{res: false}")))
 (def removeaction (usr ty da loc)
@@ -298,7 +313,7 @@
       (let end (- (len parsed-data) 1)
       (if (>= end 0)
         (for x 0 end
-          (addaction usr (parsed-data.x "ty") (parsed-data.x "da"))))))
+          (addactionf usr (parsed-data.x "ty") (parsed-data.x "da") (parsed-data.x "loc"))))))
   ))
 
 (def make-reader ()
@@ -359,13 +374,15 @@
   gnosis 1
   arcana (obj Death 0 Fate 0 Forces 0 Life 0 Mind 0 Matter 0 Prime 0 Space 0 Spirit 0 Time 0)
   merits (table)
-  faction 'pentacle)
+  faction 'pentacle
+  name "" virtue "" vice "" cabal "" legacy "" order "" path "")
 
-(= charsheets* (table))
-(= (charsheets* "foo") (inst 'charsheet 'gnosis 2))
+(= charsheets* (table) charsheetsorange* (table))
+(= (charsheets* "foo") (inst 'charsheet 'gnosis 2 'name "Foo" 'virtue 'Fortitude 'vice 'Wrath 'order "The Adamantine Arrow" 'path "Obrimos"))
 (each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (+ (coerce (* (rand) 4) 'int) 1)))
 (each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
 (each x arcana* (= (((charsheets* "foo") 'arcana) x) (coerce (* (rand) 5) 'int)))
+(= charsheetsorange* charsheets*)
 
 (def locap-string (body)
  (tag (span class "locap") (pr body)))
@@ -374,6 +391,7 @@
   `(tag (span class "norm") (pr (string ',body))))
 
 (def dots (name value out-of (o editable t))
+  (zap coerce value 'int)
   (tag (span class "right-align") (for x 1 value (eval (join (if editable `(tag (a href (string "javascript:click_dot('" ',name "', " ',value ");"))) '(eval)) '((tag (img src "s/b.png")))))) (for x (+ value 1) out-of (eval (join  (if editable `(tag (a href (string "javascript:click_dot('" ',name "', " ',x ");"))) '(eval)) `((tag (img id (string ,name "/" ,x) src "s/w.png")))) ))))
 
 ;(mac mac/k (name lst . body)) 
@@ -403,15 +421,21 @@
 (mac tfip (label value id)
   `(+ (tag (label for id) (pr label)) (tag (input type "text" value value) (tag (button)))))
 
+(mac prlr (left right)
+  `(+ (tag (span class "withrpad") (pr ,left)) (tag (span class "right-align") (pr ,right))))
+
 (def mage-charsheet (charsheet)
   (tag (section class "character-sheet")
-    (tag (div class "column")(tag (span) (pr "Player name: ") ))
+    (tag (div class "columns") 
+      (tag (div class "column") (tag (span) (pr "Player name: " ) ) (br) (tag (span) (prlr "Character name: " charsheet!name)) (br) (tag (span) (prlr "Cabal: " charsheet!cabal)))
+      (tag (div class "column") (tag (span) (prlr "Virtue: " charsheet!virtue)) (br) (tag (span) (prlr "Vice: " charsheet!vice)))
+      (tag (div class "column") (tag (span) (prlr "Order: " charsheet!order)) (br) (tag (span) (prlr "Path: " charsheet!path)) (br) (tag (span) (prlr "Legacy: " charsheet!legacy))))
     (gold-box :body (columns ))
     (gold-box :title (centered:locap-string "Attributes")
       :body (tag (div class "columns") (each x attributeblock* (tag (div class "column")
               (each y x (+ (tag (span class "wri") (pr y)) (dots (string "attributes/" y) charsheet!attributes.y 5) (tag (div class "sep"))))))))
     (gold-box :title (centered:locap-string "Skills")
-      :body (tag (div class "columns") (each x '(Mental Social Physical) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) charsheet!skills.y 5) (tag (div class "sep")))))))))
+      :body (tag (div class "columns") (each x '(Mental Physical Social) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) charsheet!skills.y 5) (tag (div class "sep")))))))))
     (gold-box @title ((locap-string "Merits") (right-align:locap-string "Arcana"))
       @body 
       ((tag (div))
@@ -420,7 +444,7 @@
          (centered:norm-string "Willpower") (tag (br)) (dots "willpower" (+ charsheet!attributes!Composure charsheet!attributes!Resolve) 10 nil) )))))
 
 (defpathjson /csjson (req)
-  (tojson (charsheets* get-user.req)))
+  (tojson (obj charsheet (charsheets* get-user.req) orange (charsheetsorange* get-user.req))))
 (defpathl /cs (req)
   (if (admin get-user.req)
     (page "Ascension Auckland: Character sheets" "s/style.css" ("s/jquery-1.3.2.min.js" "s/standard.js")
@@ -454,7 +478,7 @@
 (defop longpoll req
   ())
 
-(defpath aq req
+(defpath /aq req
   (page "Ascension Auckland: Action Queue" "s/style.css" ("s/jquery-1.3.2.min.js" "s/jquery-ui-1.7.2.custom.min.js" "s/standard.js")
     (tag (div)
          (tag (script type "application/javascript") (pr "

@@ -5,8 +5,8 @@ function initialise_charsheet()
 {
   $.getJSON('/csjson',
     function(data){
-      charsheet = JSON.parse(JSON.stringify(data));
-      charsheetadjusted = JSON.parse(JSON.stringify(data));
+      charsheet = JSON.parse(JSON.stringify(data)).charsheet;
+      charsheetadjusted = JSON.parse(JSON.stringify(data)).orange;
     }); 
 }
 

@@ -11,6 +11,9 @@ img.logo {
   margin-left: auto;
   margin-right: auto;
 }
+span.withrpad {
+  margin-right: 30px;
+}
 .common-form {
   border-radius-bottomleft: 5px;
   border-radius-bottomright: 5px;

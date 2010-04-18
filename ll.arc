@@ -375,7 +375,7 @@
   arcana (obj Death 0 Fate 0 Forces 0 Life 0 Mind 0 Matter 0 Prime 0 Space 0 Spirit 0 Time 0)
   merits (table)
   faction 'pentacle wisdom 7
-  name "" virtue "" vice "" cabal "" legacy "" order "" path "")
+  name "" virtue "" vice "" cabal "" legacy nil order "" path "")
 
 (= charsheets* (table) charsheetsorange* (table))
 (= (charsheets* "foo") (inst 'charsheet 'gnosis 2 'player "Jonny Random" 'name "Foo McDarkShado" 'virtue 'Fortitude 'vice 'Wrath 'order "The Adamantine Arrow" 'path "Obrimos" 'merits (obj "Occultation" 3)))
@@ -429,7 +429,7 @@
     (tag (div class "columns") 
       (tag (div class "column") (tag (span) (prlr "Player name: " charsheet!player)) (br) (tag (span) (prlr "Character name: " charsheet!name)) (br) (tag (span) (prlr "Cabal: " charsheet!cabal)))
       (tag (div class "column") (tag (span) (prlr "Virtue: " charsheet!virtue)) (br) (tag (span) (prlr "Vice: " charsheet!vice)))
-      (tag (div class "column") (tag (span) (prlr "Order: " charsheet!order)) (br) (tag (span) (prlr "Path: " charsheet!path)) (br) (tag (span) (prlr "Legacy: " charsheet!legacy))))
+      (tag (div class "column") (tag (span) (prlr "Order: " charsheet!order)) (br) (tag (span) (prlr "Path: " charsheet!path)) (br) (if (~is charsheet!legacy nil) (tag (span) (prlr "Legacy: " charsheet!legacy)))))
     (gold-box :body (columns ))
     (gold-box :title (centered:locap-string "Attributes")
       :body (tag (div class "columns") (each x attributeblock* (tag (div class "column")

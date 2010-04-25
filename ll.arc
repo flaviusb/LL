@@ -106,6 +106,22 @@
               #\newline  "<br />\n"
                          chr))
 
+(def escid (str)
+  (tostring 
+    (each chr str
+      (pr (case chr
+             #\:  "\\\\:"
+             #\.  "\\\\."
+             #\   "_"
+                  chr)))))
+
+(def escidm (str)
+  (tostring 
+    (each chr str
+      (pr (case chr
+             #\   "_"
+                  chr)))))
+
 ; Because of stdlib limitations, we cannot get file modification time in a platform portable way
 ; Instead, we explicitly flush the cache, and otherwise just use the existing file
 ; As the 'cache' is rev + processing -> temp file with rev identifier, the main reason to flush
@@ -428,13 +444,13 @@
 (mac tfip (label value id)
   `(+ (tag (label for id) (pr label)) (tag (input type "text" value value) (tag (button)))))
 
-(mac prlr (left right)
-  `(+ (tag (span class "withrpad") (pr ,left)) (tag (span class "right-align") (pr ,right))))
+(mac prlr (left right (o editable nil))
+  `(+ (tag (span class "withrpad") (pr ,left)) (tag (span class "right-align") (if (is ,editable "cd_direct") (let nid ,(escid left) (tag (div id ,(string (escidm left) 1) onclick (string "javascript: $('#" nid "1').hide('slow'); $('#" nid "2').show('slow');")) (pr ,right))) (pr ,right)))))
 
 (def mage-charsheet (charsheet (o editable "cd_direct"))
   (tag (section class "character-sheet")
     (tag (div class "columns") 
-      (tag (div class "column") (tag (span) (prlr "Player name: " (charsheet "player"))) (br) (tag (span) (prlr "Character name: " (charsheet "name"))) (br) (tag (span) (prlr "Cabal: " (charsheet "cabal"))))
+      (tag (div class "column") (tag (span) (prlr "Player name: " (charsheet "player") editable)) (br) (tag (span) (prlr "Character name: " (charsheet "name") editable)) (br) (tag (span) (prlr "Cabal: " (charsheet "cabal") editable)))
       (tag (div class "column") (tag (span) (prlr "Virtue: " (charsheet "virtue"))) (br) (tag (span) (prlr "Vice: " (charsheet "vice"))))
       (tag (div class "column") (tag (span) (prlr "Order: " (charsheet "order"))) (br) (tag (span) (prlr "Path: " (charsheet "path"))) (br) (if (~is (charsheet "legacy") nil) (tag (span) (prlr "Legacy: " (charsheet "legacy"))))))
     (gold-box :body (columns ))

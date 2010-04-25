@@ -55,7 +55,7 @@ function path_get(root, path)
 }
 
 
-function click_dot(name, value)
+function cd_action(name, value)
 {
   var path = name.split("/");
   //alert(JSON.stringify(path));
@@ -91,6 +91,41 @@ function click_dot(name, value)
     }
   }
 }
+
+function cd_direct(name, value)
+{
+  var path = name.split("/");
+  //alert(JSON.stringify(path));
+  var base = parseInt(path_get(charsheet, path));
+  //alert(JSON.stringify(charsheetadjusted));
+  var extent = (base < value) ? value : base;
+  //alert("Value: " + value + ", Extent: " + extent + "Base: " + base);
+  if (base == value)
+  {
+    // In this case, toggle
+    value--;
+  }
+  //if (value <= base)
+  //  charsheetadjusted = path_set(charsheetadjusted, path, base);
+  //else
+  charsheet = path_set(charsheet, path, value);
+  //alert(JSON.stringify(charsheet));
+  for (var i = 1; i <= extent; i++)
+  {
+    //alert(name + "/" + i);
+    if (i <= value)
+    {
+      document.getElementById(name + '/' + i).src = 's/b.png';
+      if (i == value)
+      {
+        $.getJSON('/submitcharsheet', {cs: JSON.stringify(charsheet)});
+      }
+    } else {
+      document.getElementById(name + '/' + i).src = 's/w.png';
+    }
+  }
+}
+
 
 function ShowLogin()
 {

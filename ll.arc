@@ -246,12 +246,12 @@
   (with (it ob spl ((ac-scheme regexp-split) "/" (string path)))
     ;(zap map spl [string _])
     (zap coerce (car (nthcdr (- (len spl) 1) spl)) 'int)
-    (each x spl (= it (list it (if (is (type x) 'int) (max ma x) (list 'quote (coerce x 'sym))))))
+    (each x spl (= it (list it (if (is (type x) 'int) (max ma x) (list 'quote (coerce x 'string))))))
     `(= ,@it)))
 
 (mac getwpath (ob path)
   (with (it ob spl (rev:cdr:rev ((ac-scheme regexp-split) "/" (string path))))
-    (each x spl (= it (list it (list 'quote (coerce (string x) 'sym)))))
+    (each x spl (= it (list it (list 'quote (coerce (string x) 'string)))))
     it))
 
 ; each action queue is a multitable of type/data pairs, with type, date, and location tags
@@ -294,6 +294,9 @@
     (parse-actions get-user.req (arg req "aq"))
     (tojson (obj message 'success futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing)))))
 
+(defpathjson /submitcharsheet (req)
+  (= (charsheets* (get-user req)) (fromjson (arg req "cs"))))
+
 (= waitinglist* (table))
 (mac w/touching (id . body)
   `(do1
@@ -329,7 +332,7 @@
 ; each charsheet should have an associated schema, and then be k,v pairs
 ; keys must be strings, values may be number, list or table
 (def render-charsheet (charsheet) 
-  (charsheet!schema charsheet))
+  ((charsheet "schema") charsheet))
 
 (mac ret (name . body)
   `(let ,name nil
@@ -356,10 +359,10 @@
 ; columns &body
 ; dots number max
 
-(= attributeblock* '((Intelligence Wits Resolve) (Strength Dexterity Stamina) (Presence Manipulation Composure)))
-(= skillblock* '((Mental (Academics Computer Crafts Investigation Medicine Occult Politics Science)) (Physical (Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry)) (Social (Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge))))
-(= skillobj* (obj Mental '(Academics Computer Crafts Investigation Medicine Occult Politics Science) Physical '(Athletics Brawl Drive Firearms Larceny Stealth Survival Weaponry) Social '(Animal#\ Ken Empathy Expression Intimidation Persuasion Socialize Streetwise Subterfuge)))
-(= arcana* '(Death Fate Forces Life Mind Matter Prime Space Spirit Time))
+(= attributeblock* '(("Intelligence" "Wits" "Resolve") ("Strength" "Dexterity" "Stamina") ("Presence" "Manipulation" "Composure")))
+(= skillblock* '(("Mental" ("Academics" "Computer" "Crafts" "Investigation" "Medicine" "Occult" "Politics" "Science")) ("Physical" ("Athletics" "Brawl" "Drive" "Firearms" "Larceny" "Stealth" "Survival" "Weaponry")) ("Social" ("Animal Ken" "Empathy" "Expression" "Intimidation" "Persuasion" "Socialize" "Streetwise" "Subterfuge"))))
+(= skillobj* (obj "Mental" '("Academics" "Computer" "Crafts" "Investigation" "Medicine" "Occult" "Politics" "Science") "Physical" '("Athletics" "Brawl" "Drive" "Firearms" "Larceny" "Stealth" "Survival" "Weaponry") "Social" '("Animal Ken" "Empathy" "Expression" "Intimidation" "Persuasion" "Socialize" "Streetwise" "Subterfuge")))
+(= arcana* '("Death" "Fate" "Forces" "Life" "Mind" "Matter" "Prime" "Space" "Spirit" "Time"))
 
 ; schema for charsheets
 ; attributes, skills
@@ -367,21 +370,25 @@
 ; merits are a list of tables (templ merit name dots specialisations submerits)
 
 (deftem charsheet 
-  attributes (obj Intelligence 1 Wits 1 Resolve 1 Strength 1 Dexterity 1 Stamina 1 Presence 1 Manipulation 1 Composure 1)
-  skills (obj Academics 0 Computer 0 Crafts 0 Investigation 0 Medicine 0 Occult 0 Politics 0 Science 0 
-              Athletics 0 Brawl 0 Drive 0 Firearms 0 Larceny 0 Stealth 0 Survival 0 Weaponry 0
-              Animal#\ Ken 0 Empathy 0 Expression 0 Intimidation 0 Persuasion 0 Socialize 0 Streetwise 0 Subterfuge 0)
-  gnosis 1
-  arcana (obj Death 0 Fate 0 Forces 0 Life 0 Mind 0 Matter 0 Prime 0 Space 0 Spirit 0 Time 0)
-  merits (table)
-  faction 'pentacle wisdom 7
-  name "" virtue "" vice "" cabal "" legacy nil order "" path "")
+  "attributes" (obj "Intelligence" 1 "Wits" 1 "Resolve" 1 "Strength" 1 "Dexterity" 1 "Stamina" 1 "Presence" 1 "Manipulation" 1 "Composure" 1)
+  "skills" (obj "Academics" 0 "Computer" 0 "Crafts" 0 "Investigation" 0 "Medicine" 0 "Occult" 0 "Politics" 0 "Science" 0 
+              "Athletics" 0 "Brawl" 0 "Drive" 0 "Firearms" 0 "Larceny" 0 "Stealth" 0 "Survival" 0 "Weaponry" 0
+              "Animal Ken" 0 "Empathy" 0 "Expression" 0 "Intimidation" 0 "Persuasion" 0 "Socialize" 0 "Streetwise" 0 "Subterfuge" 0)
+  "gnosis" 1
+  "arcana" (obj "Death" 0 "Fate" 0 "Forces" 0 "Life" 0 "Mind" 0 "Matter" 0 "Prime" 0 "Space" 0 "Spirit" 0 "Time" 0)
+  "merits" (table)
+  "faction" "pentacle" "wisdom" 7
+  "name" "" "virtue" "" "vice" "" "cabal" "" "legacy" nil "order" "" "path" "")
 
+
+;(= charsheetdir* "charsheets")
+;(def loadchardata ()
+;  (= charsheets* (safe-load-table charsheetdir*)))
 (= charsheets* (table) charsheetsorange* (table))
-(= (charsheets* "foo") (inst 'charsheet 'gnosis 2 'player "Jonny Random" 'name "Foo McDarkShado" 'virtue 'Fortitude 'vice 'Wrath 'order "The Adamantine Arrow" 'path "Obrimos" 'merits (obj "Occultation" 3)))
-(each x (flat attributeblock*) (= (((charsheets* "foo") 'attributes) x) (+ (coerce (* (rand) 4) 'int) 1)))
-(each x (flat skillblock*) (= (((charsheets* "foo") 'skills) x) (coerce (* (rand) 5) 'int)))
-(each x arcana* (= (((charsheets* "foo") 'arcana) x) (coerce (* (rand) 5) 'int)))
+(= (charsheets* "foo") (inst 'charsheet "gnosis" 2 "player" "Jonny Random" "name" "Foo McDarkShado" "virtue" "Fortitude" "vice" "Wrath" "order" "The Adamantine Arrow" "path" "Obrimos" "merits" (obj "Occultation" 3)))
+(each x (flat attributeblock*) (= (((charsheets* "foo") "attributes") x) (+ (coerce (* (rand) 4) 'int) 1)))
+(each x (flat skillblock*) (= (((charsheets* "foo") "skills") x) (coerce (* (rand) 5) 'int)))
+(each x arcana* (= (((charsheets* "foo") "arcana") x) (coerce (* (rand) 5) 'int)))
 (= charsheetsorange* charsheets*)
 
 (def locap-string (body)
@@ -390,9 +397,9 @@
 (mac norm-string body
   `(tag (span class "norm") (pr (string ',body))))
 
-(def dots (name value out-of (o editable t))
+(def dots (name value out-of (o editable t) (o func "cd_action"))
   (zap coerce value 'int)
-  (tag (span class "right-align") (for x 1 value (eval (join (if editable `(tag (a href (string "javascript:click_dot('" ',name "', " ',value ");"))) '(eval)) '((tag (img src "s/b.png")))))) (for x (+ value 1) out-of (eval (join  (if editable `(tag (a href (string "javascript:click_dot('" ',name "', " ',x ");"))) '(eval)) `((tag (img id (string ,name "/" ,x) src "s/w.png")))) ))))
+  (tag (span class "right-align") (for x 1 value (eval (join (if editable `(tag (a href (string "javascript:" ',func "('" ',name "', " ',x ");"))) '(eval)) `((tag (img id (string ,name "/" ,x) src "s/b.png")))))) (for x (+ value 1) out-of (eval (join  (if editable `(tag (a href (string "javascript:" ',func "('" ',name "', " ',x ");"))) '(eval)) `((tag (img id (string ,name "/" ,x) src "s/w.png")))) ))))
 
 ;(mac mac/k (name lst . body)) 
 ;(mac/k () )
@@ -424,25 +431,25 @@
 (mac prlr (left right)
   `(+ (tag (span class "withrpad") (pr ,left)) (tag (span class "right-align") (pr ,right))))
 
-(def mage-charsheet (charsheet)
+(def mage-charsheet (charsheet (o editable "cd_direct"))
   (tag (section class "character-sheet")
     (tag (div class "columns") 
-      (tag (div class "column") (tag (span) (prlr "Player name: " charsheet!player)) (br) (tag (span) (prlr "Character name: " charsheet!name)) (br) (tag (span) (prlr "Cabal: " charsheet!cabal)))
-      (tag (div class "column") (tag (span) (prlr "Virtue: " charsheet!virtue)) (br) (tag (span) (prlr "Vice: " charsheet!vice)))
-      (tag (div class "column") (tag (span) (prlr "Order: " charsheet!order)) (br) (tag (span) (prlr "Path: " charsheet!path)) (br) (if (~is charsheet!legacy nil) (tag (span) (prlr "Legacy: " charsheet!legacy)))))
+      (tag (div class "column") (tag (span) (prlr "Player name: " (charsheet "player"))) (br) (tag (span) (prlr "Character name: " (charsheet "name"))) (br) (tag (span) (prlr "Cabal: " (charsheet "cabal"))))
+      (tag (div class "column") (tag (span) (prlr "Virtue: " (charsheet "virtue"))) (br) (tag (span) (prlr "Vice: " (charsheet "vice"))))
+      (tag (div class "column") (tag (span) (prlr "Order: " (charsheet "order"))) (br) (tag (span) (prlr "Path: " (charsheet "path"))) (br) (if (~is (charsheet "legacy") nil) (tag (span) (prlr "Legacy: " (charsheet "legacy"))))))
     (gold-box :body (columns ))
     (gold-box :title (centered:locap-string "Attributes")
       :body (tag (div class "columns") (each x attributeblock* (tag (div class "column")
-              (each y x (+ (tag (span class "wri") (pr y)) (dots (string "attributes/" y) charsheet!attributes.y 5) (tag (div class "sep"))))))))
+              (each y x (+ (tag (span class "wri") (pr y)) (dots (string "attributes/" y) ((charsheet "attributes") y) 5 t editable) (tag (div class "sep"))))))))
     (gold-box :title (centered:locap-string "Skills")
-      :body (tag (div class "columns") (each x '(Mental Physical Social) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) charsheet!skills.y 5) (tag (div class "sep")))))))))
+      :body (tag (div class "columns") (each x '(Mental Physical Social) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) ((charsheet "skills") y) 5 t editable) (tag (div class "sep")))))))))
     (gold-box @title ((locap-string "Merits") (right-align:locap-string "Arcana"))
       @body 
-      ((tag (div class "column") (each (merit numd) charsheet!merits (tag (span) (tag (span class "wri") (pr merit)) (dots (string "merits/" merit) numd 5))))
-       (tag (div class "right-align") (each x arcana* (+ (tag (span class "wri") (pr x)) (dots (string "arcana/" x) charsheet!arcana.x 5) (tag (div class "sep"))))
-         (centered:norm-string "Gnosis") (tag (br)) (dots "gnosis" charsheet!gnosis 10)
-         (centered:norm-string "Willpower") (tag (br)) (dots "willpower" (+ charsheet!attributes!Composure charsheet!attributes!Resolve) 10 nil)
-         (centered:norm-string "Wisdom") (tag (br)) (dots "wisdom" charsheet!wisdom 10 nil)
+      ((tag (div class "column") (each (merit numd) (charsheet "merits") (tag (span) (tag (span class "wri") (pr merit)) (dots (string "merits/" merit) numd 5 t editable))))
+       (tag (div class "right-align") (each x arcana* (+ (tag (span class "wri") (pr x)) (dots (string "arcana/" x) ((charsheet "arcana") x) 5 t editable) (tag (div class "sep"))))
+         (centered:norm-string "Gnosis") (tag (br)) (dots "gnosis" (charsheet "gnosis") 10 nil editable)
+         (centered:norm-string "Willpower") (tag (br)) (dots "willpower" (+ ((charsheet "attributes") "Composure") ((charsheet "attributes") "Resolve")) 10 nil editable)
+         (centered:norm-string "Wisdom") (tag (br)) (dots "wisdom" (charsheet "wisdom") 10 nil editable)
  )))))
 
 (defpathjson /csjson (req)
@@ -485,7 +492,7 @@
     (tag (div)
          (tag (script type "application/javascript") (pr "
 <![CDATA[
-$(document).ready(function(){
+$(document)).ready(function(){
   actionise();
   get_action_queue_from_server();
 });

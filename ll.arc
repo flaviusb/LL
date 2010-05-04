@@ -443,9 +443,14 @@
 
 (mac tfip (label value id)
   `(+ (tag (label for id) (pr label)) (tag (input type "text" value value) (tag (button)))))
+(def intext (id val)
+  (let nid (escid id) (tag (span)
+    (tag (div id (string (escidm id) 1)  onclick (string "javascript: $('#" nid "1').hide('slow'); $('#" nid "2').show('slow');")) (pr val))
+    (tag (input id (string (escidm id) 2) class "hid cfi wri") (pr val))
+  )))
 
 (mac prlr (left right (o editable nil))
-  `(+ (tag (span class "withrpad") (pr ,left)) (tag (span class "right-align") (if (is ,editable "cd_direct") (let nid ,(escid left) (tag (div id ,(string (escidm left) 1) onclick (string "javascript: $('#" nid "1').hide('slow'); $('#" nid "2').show('slow');")) (pr ,right))) (pr ,right)))))
+  `(+ (tag (div class "wri cft") (pr ,left)) (tag (span class "right-align") (if (is ,editable "cd_direct") (intext ,left ,right) (pr ,right))) (tag (div class "sep"))))
 
 (def mage-charsheet (charsheet (o editable "cd_direct"))
   (tag (section class "character-sheet")

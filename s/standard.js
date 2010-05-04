@@ -131,9 +131,9 @@ function ShowLogin()
 {
   loginshowing = !loginshowing;
   if(loginshowing)
-    $(".common-form").show("slow");
+    $(".cf").show("slow");
   else
-    $(".common-form").hide("slow");
+    $(".cf").hide("slow");
 }
 
 function get_aq_structure_from_server()

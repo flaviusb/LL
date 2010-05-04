@@ -13,8 +13,9 @@ img.logo {
 }
 span.withrpad {
   margin-right: 30px;
+  padding: 5px;
 }
-.common-form {
+.cf {
   border-radius-bottomleft: 5px;
   border-radius-bottomright: 5px;
   -moz-border-radius-bottomleft: 5px;
@@ -33,8 +34,15 @@ span.withrpad {
   margin-top: -1px;
   font-size: 14px;
 }
-.common-form input[type="text"], .common-form input[type="password"] {
-  display: block;
+.cfl {
+  margin: 0 0 5px;
+  padding: 5px;
+}
+.cft {
+  /*margin: 5px 0 5px;*/
+  /*padding: 5px;*/
+}
+.cfi input[type="text"], .cfi input[type="password"] {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -44,6 +52,8 @@ span.withrpad {
   padding: 5px;
   width: 203px;
 }
+.hid { display: none; }
+.blk { display: block; }
 div.columns { display: inline; width: 95% }
 div.column { float: left; width: auto; margin: 3em; }
 div.gold-box { clear: both; width: 100%; }

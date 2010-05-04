@@ -67,8 +67,8 @@
 
 (mac login-header ((o prefix ""))
   `(tag (li class "login")
-   (if (tag (a href "#" onclick "ShowLogin()") (pr "Log in"))
-   (tag (fieldset id "signing_menu" class "common-form")
+   (tag (a href "#" onclick "ShowLogin()") (pr "Log in"))
+   (tag (fieldset id "signing_menu" class "hid cf cfi")
      (tag (form method "post" id "signin" action ,(+ prefix "sessions"))
        (tag (p) (tag (label for "u")(pr "Username"))
        (tag (input type "text" id "u" name "u" value "" title "u")))       
@@ -78,7 +78,7 @@
        (tag (input type "checkbox" id "remember" name "remember_me" value "1"))
        (tag (label for "remember") (pr "Remember me")))
      )
-   ))))
+   )))
 
 (mac navit (loc text)
   `(tag (li) (tag (a href ,(string loc)) (pr ,(string text)))))

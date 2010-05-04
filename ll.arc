@@ -458,7 +458,7 @@
       :body (tag (div class "columns") (each x attributeblock* (tag (div class "column")
               (each y x (+ (tag (span class "wri") (pr y)) (dots (string "attributes/" y) ((charsheet "attributes") y) 5 t editable) (tag (div class "sep"))))))))
     (gold-box :title (centered:locap-string "Skills")
-      :body (tag (div class "columns") (each x '(Mental Physical Social) (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) ((charsheet "skills") y) 5 t editable) (tag (div class "sep")))))))))
+      :body (tag (div class "columns") (each x '("Mental" "Physical" "Social") (tag (div class "column") (+ (locap-string x) (tag (div class "sep")) (each y skillobj*.x (+ (tag (span class "wri") (pr y)) (dots (string "skills/" y) ((charsheet "skills") y) 5 t editable) (tag (div class "sep")))))))))
     (gold-box @title ((locap-string "Merits") (right-align:locap-string "Arcana"))
       @body 
       ((tag (div class "column") (each (merit numd) (charsheet "merits") (tag (span) (tag (span class "wri") (pr merit)) (dots (string "merits/" merit) numd 5 t editable))))

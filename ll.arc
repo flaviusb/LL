@@ -93,7 +93,7 @@
 (mac header ((o prefix ""))
   `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href ,(+ prefix "index.html")) (tag (img src ,(+ prefix "s/SkullTiny.png"))))) (navit ,(+ prefix "vc/about") "About") (navit ,(+ prefix "vc/rules") "House Rules") (if (and (~is req nil) (get-user req)) (character-header ,prefix)
      (login-header ,prefix)))))
-(defpath / (req) (page "Ascension Auckland" "s/style.css" ("s/jquery-1.3.2.min.js" "s/standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (img class "logo" src "s/NexusLogo.png")))))
+(defpath / (req) (page "Ascension Auckland" "s/style.css" ("s/jquery-1.4.2.min.js" "s/standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (img class "logo" src "s/NexusLogo.png")))))
 
 (defpathr /index.html / (req) nil)
 
@@ -157,12 +157,12 @@
 
 (defpath /vc/: (req doc)
   (if (file-exists (string "vcstatic/" doc ".text"))
-    (page "Ascension Auckland: House Rules" "../s/style.css" ("../s/jquery-1.3.2.min.js" "../s/standard.js")
+    (page "Ascension Auckland: House Rules" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js")
       (+
         (tag header (tag h1 (pr "Nexus")))
         (header "../")
         (tag (section class "generated-text") (w/cd "vcstatic" (cacheize (+ doc ".text") (+ doc ".html") textize)))))
-    (page "Document Not Found" "../s/style.css" ("../s/jquery-1.3.2.min.js" "../s/standard.js") (+ "Document " doc " not found."))))
+    (page "Document Not Found" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js") (+ "Document " doc " not found."))))
 
 ;(= actionsdone* (table))
 ; per user; [pending, held, done, future], personal, retainer - [by ref], ally - [by fnidish]
@@ -477,12 +477,12 @@
   (tojson (obj charsheet (charsheets* get-user.req) orange (charsheetsorange* get-user.req))))
 (defpathl /cs (req)
   (if (admin get-user.req)
-    (page "Ascension Auckland: Character sheets" "s/style.css" ("s/jquery-1.3.2.min.js" "s/standard.js")
+    (page "Ascension Auckland: Character sheets" "s/style.css" ("s/jquery-1.4.2.min.js" "s/standard.js")
       (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (section class "charsheet") (each (k v) tablist.hpasswords* (tag span (pr k " ")
                (if (charsheets* k)
                  (+ (tag (a href (+ "cs?view=" k))  (pr "View character sheet")))
                  (+ (tag (a href (+ "cs?create=" k))(pr "Create blank character sheet") )) )) (tag br)) )))
-    (page "Ascension Auckland: Character sheet" "s/style.css" ("s/jquery-1.3.2.min.js" "s/standard.js") 
+    (page "Ascension Auckland: Character sheet" "s/style.css" ("s/jquery-1.4.2.min.js" "s/standard.js") 
       (let cs (charsheets* get-user.req) 
         (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (section class "charsheet") (tag (script type "application/javascript") (prn "\ninitialise_charsheet();")) (mage-charsheet cs)))))))
 
@@ -509,7 +509,7 @@
   ())
 
 (defpath /aq req
-  (page "Ascension Auckland: Action Queue" "s/style.css" ("s/jquery-1.3.2.min.js" "s/jquery-ui-1.7.2.custom.min.js" "s/standard.js")
+  (page "Ascension Auckland: Action Queue" "s/style.css" ("s/jquery-1.4.2.min.js" "s/jquery-ui-1.8.1.custom.min.js" "s/standard.js")
     (tag (div)
          (tag (script type "application/javascript") (pr "
 <![CDATA[
@@ -524,7 +524,7 @@ $(document)).ready(function(){
 
 ; redefine login page for the moment; deal with this in a more ajaxy way in future
 (def login-page (switch (o msg nil) (o afterward nil))
-  (page "Log in" "s/style.css" ("s/jquery-1.3.2.min.js" "s/standard.js") (tag (div) 
+  (page "Log in" "s/style.css" ("s/jquery-1.4.2.min.js" "s/standard.js") (tag (div) 
    (pagemessage msg)
    (tag (fieldset id "signing_menu" class "more-common-form")
      (tag (form method "post" id "signin" action "/sessions")

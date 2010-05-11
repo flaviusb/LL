@@ -158,7 +158,7 @@
 (def mustacheize (fi)
     (with (temp "" pipe nil acc "")
       (do ;(whilet li readc.fi (= temp (+ temp li)))
-          (= pipe (pipe-from:string  "mustache vcstatic/" fi ".yml vcstatic/" fi ".mustache"))
+          (= pipe (pipe-from:string  "mustache " fi ".yml " fi ".mustache"))
           (whilet lj readc.pipe (= acc (+ acc lj)))
           (close pipe)
           acc)))
@@ -175,7 +175,7 @@
         (+
           (tag header (tag h1 (pr "Nexus")))
           (header "../")
-          (tag (section class "generated-text") (w/cd "vcstatic" (cacheize doc (+ doc ".html") mustacheize)))))
+          (tag (section class "generated-text") (w/cd "vcstatic" (pr (mustacheize doc))))))
       (page "Document Not Found" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js") (+ "Document " doc " not found.")))))
 
 ;(= actionsdone* (table))

@@ -155,14 +155,28 @@
           (close pipe)
           acc)))
 
+(def mustacheize (fi)
+    (with (temp "" pipe nil acc "")
+      (do ;(whilet li readc.fi (= temp (+ temp li)))
+          (= pipe (pipe-from:string  "mustache vcstatic/" fi ".yml vcstatic/" fi ".mustache"))
+          (whilet lj readc.pipe (= acc (+ acc lj)))
+          (close pipe)
+          acc)))
+
 (defpath /vc/: (req doc)
   (if (file-exists (string "vcstatic/" doc ".text"))
-    (page "Ascension Auckland: House Rules" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js")
+    (page "Ascension Auckland" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js")
       (+
         (tag header (tag h1 (pr "Nexus")))
         (header "../")
         (tag (section class "generated-text") (w/cd "vcstatic" (cacheize (+ doc ".text") (+ doc ".html") textize)))))
-    (page "Document Not Found" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js") (+ "Document " doc " not found."))))
+    (if (file-exists (string "vcstatic/" doc ".mustache"))
+      (page "Ascension Auckland" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js")
+        (+
+          (tag header (tag h1 (pr "Nexus")))
+          (header "../")
+          (tag (section class "generated-text") (w/cd "vcstatic" (cacheize doc (+ doc ".html") mustacheize)))))
+      (page "Document Not Found" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js") (+ "Document " doc " not found.")))))
 
 ;(= actionsdone* (table))
 ; per user; [pending, held, done, future], personal, retainer - [by ref], ally - [by fnidish]

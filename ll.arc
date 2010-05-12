@@ -81,7 +81,9 @@
    )))
 
 (mac navit (loc text)
-  `(tag (li) (tag (a href ,(string loc)) (pr ,(string text)))))
+  `(tag (li class "menu") (tag (a href ,(string loc)) (pr ,(string text)))))
+
+(mac popupmenu (id outer inner) `(tag (li class "menu") ,outer (tag (ul class "menu mf") ,inner) ))
 
 (defpathr /logout / (req)
   (logout-user get-user.req))
@@ -91,8 +93,12 @@
 ;  `(tag (div)(tag (a href "aq")(pr "Action Queue"))(pr " ")(tag (a href "cs")(pr "Character Sheet"))(pr " ")(w/rlink (do (logout-user get-user.req) "index.html") (pr (+ "Log out " get-user.req)))))
 
 (mac header ((o prefix ""))
-  `(tag (nav) (tag (ul) (tag (li class "img") (tag (a href ,(+ prefix "index.html")) (tag (img src ,(+ prefix "s/SkullTiny.png"))))) (navit ,(+ prefix "vc/about") "About") (navit ,(+ prefix "vc/rules") "House Rules") (if (and (~is req nil) (get-user req)) (character-header ,prefix)
-     (login-header ,prefix)))))
+  `(tag (nav) (tag (ul class "menu") (tag (li class "img") (tag (a href ,(+ prefix "index.html")) (tag (img src ,(+ prefix "s/SkullTiny.png"))))) 
+     (popupmenu "OOC" (tag (a href "#") (pr "OOC"))(+ (navit ,(+ prefix "vc/about") "About") (navit ,(+ prefix "vc/rules") "House Rules") (navit ,(+ prefix "vc/gamelocations") "Game Dates and Locations")))
+     (popupmenu "IC" (tag (a href "#") (pr "IC")) (+ (navit ,(+ prefix "vc/timeline") "Timeline") (navit ,(+ prefix "vc/setting") "Setting") (navit ,(+ prefix "vc/cabals") "Cabals")))
+     (if (and (~is req nil) (get-user req))
+       (character-header ,prefix)
+       (login-header ,prefix)))))
 (defpath / (req) (page "Ascension Auckland" "s/style.css" ("s/jquery-1.4.2.min.js" "s/standard.js") (+ (tag header (tag h1 (pr "Nexus"))) (header) (tag (img class "logo" src "s/NexusLogo.png")))))
 
 (defpathr /index.html / (req) nil)

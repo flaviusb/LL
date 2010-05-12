@@ -30,10 +30,27 @@ span.withrpad {
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -webkit-border-bottom-right-radius: 5px;
-  display: none;
   background-color: blue;
   position: absolute;
   width: 210px;
+  z-index: 100;
+  border: 1px transparent;
+  text-align: left;
+  padding: 10px;
+  margin-left: -1px;
+  margin-top: -1px;
+  font-size: 14px;
+}
+.mf {
+  border-radius-bottomleft: 5px;
+  border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  background-color: blue;
+  position: absolute;
+  width: 170px;
   z-index: 100;
   border: 1px transparent;
   text-align: left;
@@ -93,10 +110,10 @@ nav ul {
 nav ul li {
   float: left;
 }
-nav ul li a {
+nav ul li a, nav ul li div {
   display: block;
-  margin-right: 20px;
-  width: 120px;
+  margin-right: 40px;
+  width: 140px;
   font-size: 14px;
   line-height: 48px;
   text-align: center;

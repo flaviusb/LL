@@ -1,6 +1,23 @@
 var charsheet = null, charsheetadjusted = null;
 var loginshowing = false;
 
+$(document).ready(function() {
+  var toggle = function(direction, display) {
+    return function() {
+      var self = this;
+      var ul = $("ul", this);
+      if( ul.css("display") == display && !self["block" + direction] ) {
+        self["block" + direction] = true;
+        ul["slide" + direction]("slow", function() {
+          self["block" + direction] = false;
+        });
+      }
+    };
+  }
+  $("li.menu").hover(toggle("Down", "none"), toggle("Up", "block"));
+  $("li.menu ul").hide();
+});
+
 function initialise_charsheet()
 {
   $.getJSON('/csjson',
@@ -134,6 +151,20 @@ function ShowLogin()
     $("#signin_menu").show("slow");
   else
     $("#signin_menu").hide("slow");
+}
+
+var showing = {};
+function ShowID(id)
+{
+  if (!showing[id])
+    $('#' + id).show('fast');
+  showing[id] = true;
+}
+function HideID(id)
+{
+  if (showing[id])
+    $('#' + id).hide('fast');
+  showing[id] = false;
 }
 
 function get_aq_structure_from_server()

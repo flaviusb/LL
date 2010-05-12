@@ -460,7 +460,7 @@
 (def intext (id val)
   (let nid (escid id) (tag (span)
     (tag (div id (string (escidm id) 1)  onclick (string "javascript: $('#" nid "1').hide('slow'); $('#" nid "2').show('slow');")) (pr val))
-    (tag (input id (string (escidm id) 2) class "hid cfi wri") (pr val))
+    (tag (input id (string (escidm id) 2) class "hid cfi wri" value val))
   )))
 
 (mac prlr (left right (o editable nil))

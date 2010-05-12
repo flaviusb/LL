@@ -66,9 +66,9 @@
 ;response
 
 (mac login-header ((o prefix ""))
-  `(tag (li class "login")
+  `(tag (li class "login menu")
    (tag (a href "#" onclick "ShowLogin()") (pr "Log in"))
-   (tag (fieldset id "signing_menu" class "hid cf cfi")
+   (tag (fieldset id "signin_menu" class "hid cf cfi")
      (tag (form method "post" id "signin" action ,(+ prefix "sessions"))
        (tag (p) (tag (label for "u")(pr "Username"))
        (tag (input type "text" id "u" name "u" value "" title "u")))       

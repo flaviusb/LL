@@ -154,7 +154,7 @@
         (whilet b (readc i)
           (writec b)))
       (w/outfile fo fl
-        (let str proc.fl
+        (let str proc.file
           (do (disp str fo)
               (disp str)))))))
 

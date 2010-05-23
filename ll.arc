@@ -147,6 +147,17 @@
                       (disp str fo)
                       (disp str)))))))))
 
+(def lamecache (file proc)
+  (let fl (+ "../static-cache/" file)
+    (if (file-exists fl)
+      (w/infile i fl
+        (whilet b (readc i)
+          (writec b)))
+      (w/outfile fo fl
+        (let str proc.fi
+          (do (disp str fo)
+              (disp str)))))))
+
 (def clear-cache-directories ()
   (each x cachedirs* (do (rm-rf x) (mkdir x))))
 
@@ -181,7 +192,7 @@
         (+
           (tag header (tag h1 (pr "Nexus")))
           (header "../")
-          (tag (section class "generated-text") (w/cd "vcstatic" (pr (mustacheize doc))))))
+          (tag (section class "generated-text") (w/cd "vcstatic" (lamecache doc mustacheize)))))
       (page "Document Not Found" "../s/style.css" ("../s/jquery-1.4.2.min.js" "../s/standard.js") (+ "Document " doc " not found.")))))
 
 ;(= actionsdone* (table))

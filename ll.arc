@@ -1,6 +1,11 @@
 (each x '("ac1.arc" "urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc" "fileutils.arc") (load (+ "lib/" x)))
 (each x '("files.arc" "http.arc" "web.arc") (load x))
 
+(if (file-exists "secret-found")
+  (load "secret/restore.arc")
+  (do (load "secret/first-run.arc")
+      (system "touch secret-found")))
+
 ;(def get-user (req) 
 ;  (let u (aand (alref car.req!cooks "user") (cookie->user* (sym it)))
 ;    (when u (= (logins* u) car.req!ip))
@@ -415,17 +420,6 @@
   "merits" (table)
   "faction" "pentacle" "wisdom" 7
   "name" "" "virtue" "" "vice" "" "cabal" "" "legacy" nil "order" "" "path" "")
-
-
-;(= charsheetdir* "charsheets")
-;(def loadchardata ()
-;  (= charsheets* (safe-load-table charsheetdir*)))
-(= charsheets* (table) charsheetsorange* (table))
-(= (charsheets* "foo") (inst 'charsheet "gnosis" 2 "player" "Jonny Random" "name" "Foo McDarkShado" "virtue" "Fortitude" "vice" "Wrath" "order" "The Adamantine Arrow" "path" "Obrimos" "merits" (obj "Occultation" 3)))
-(each x (flat attributeblock*) (= (((charsheets* "foo") "attributes") x) (+ (coerce (* (rand) 4) 'int) 1)))
-(each x (flat skillblock*) (= (((charsheets* "foo") "skills") x) (coerce (* (rand) 5) 'int)))
-(each x arcana* (= (((charsheets* "foo") "arcana") x) (coerce (* (rand) 5) 'int)))
-(= charsheetsorange* charsheets*)
 
 (def locap-string (body)
  (tag (span class "locap") (pr body)))

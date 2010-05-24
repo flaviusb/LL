@@ -383,7 +383,7 @@
 (mac defc ()
   ())
 
-(= charsheets* (multitable))
+;(= charsheets* (multitable))
 ; each charsheet should have an associated schema, and then be k,v pairs
 ; keys must be strings, values may be number, list or table
 (def render-charsheet (charsheet) 

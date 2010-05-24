@@ -1,6 +1,9 @@
 (each x '("ac1.arc" "urlencode0.arc" "between0.arc" "parsecomb0.arc" "tojson0.arc" "fromjson0.arc" "fileutils.arc") (load (+ "lib/" x)))
 (each x '("files.arc" "http.arc" "web.arc") (load x))
 
+(= hpwfile*   "secret/hpw"
+   adminfile* "secret/admin")
+
 (if (file-exists "secret-found")
   (load "secret/restore.arc")
   (do (load "secret/first-run.arc")

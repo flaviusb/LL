@@ -350,7 +350,9 @@
     (tojson (obj message 'success futureactions (aif (actionqueue* get-user.req) it 'nothing) pastactions (aif (actionsdone* get-user.req) it 'nothing)))))
 
 (defpathjson /submitcharsheet (req)
-  (= (charsheets* (get-user req)) (fromjson (arg req "cs"))))
+  (do 
+    (= (charsheets* (get-user req)) (fromjson (arg req "cs")))
+    (save-table charsheets* "secret/charsheets")))
 
 (= waitinglist* (table))
 (mac w/touching (id . body)
